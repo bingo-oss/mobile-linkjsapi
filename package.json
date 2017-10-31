@@ -1,0 +1,21 @@
+{
+  "name": "linkapi",
+  "version": "0.1.0",
+  "description": "Link平台提供给小程序开发者&轻应用开发者的jsapi",
+  "main": "linkapi.js",
+  "scripts": {},
+  "author": "bingosoft",
+  "license": "Apache 2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bingo-oss/mobile-linkjsapi.git"
+  },
+  "keywords": [
+    "link",
+    "js"
+  ],
+  "bugs": {
+    "url": "https://github.com/bingo-oss/mobile-linkjsapi/issues"
+  },
+  "homepage": "https://github.com/bingo-oss/mobile-linkjsapi#readme"
+}
