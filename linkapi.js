@@ -966,6 +966,70 @@ var linkapi = {
     },
 
     /**
+     * @class 网络请求
+     */
+
+    /**
+     * 发送GET请求
+     * @method get
+     * @param params {object} 请求参数
+     * @param params.url {string} 请求的URL
+     * @param params.headers {object} 请求头
+     * @param params.type {string} 响应类型, json(默认),text
+     * @param params.data {object} 请求数据，自动拼接到url后面
+     * @return {Promise.<TResult>} 成功: resolve(data, status, statusText), 失败: reject(status, statusText)
+     */
+    get(params){
+        return this.getToken().then(res => {
+            let token = res["accessToken"];
+            params.headers = params.headers || {};
+            params.headers["Authorization"] = "Bearer" + token;
+            return ajax.get(params).catch((status, statusText) => {
+                if (status == 401) {
+                    return this.refreshToken().then(res => {
+                        token = res["accessToken"];
+                        params.headers = params.headers || {};
+                        params.headers["Authorization"] = "Bearer" + token;
+                        return ajax.get(params);
+                    });
+                } else {
+                    return Promise.reject(status, statusText);
+                }
+            });
+        });
+    },
+
+    /**
+     * 发送POST请求
+     * @method post
+     * @param params {object} 请求参数
+     * @param params.url {string} 请求的URL
+     * @param params.headers {object} 请求头, Content-Type默认值是 application/x-www-form-urlencoded
+     * @param params.type {string} 响应类型, json(默认),text
+     * @param params.data {object} 请求数据，带到 HTTP body中
+     * @return {Promise.<TResult>} 成功: resolve(data, status, statusText), 失败: reject(status, statusText)
+     */
+    post(params){
+        return this.getToken().then(res => {
+            let token = res["accessToken"];
+            params.headers = params.headers || {};
+            params.headers["Authorization"] = "Bearer" + token;
+            return ajax.post(params).catch((status, statusText) => {
+                if (status == 401) {
+                    return this.refreshToken().then(res => {
+                        token = res["accessToken"];
+                        params.headers = params.headers || {};
+                        params.headers["Authorization"] = "Bearer" + token;
+                        return ajax.get(params);
+                    });
+                } else {
+                    return Promise.reject(status, statusText);
+                }
+            });
+        });
+    },
+
+    /**
      * @class 其他
      */
 
@@ -1080,66 +1144,8 @@ var linkapi = {
      */
     getLanguage: function (callback) {
         link.getLanguage([], callback, null);
-    },
-
-    /**
-     * 发送GET请求
-     * @param params {object} 请求参数
-     * @param params.url {string} 请求的URL
-     * @param params.headers {object} 请求头
-     * @param params.type {string} 响应类型, json(默认),text
-     * @param params.data {object} 请求数据，自动拼接到url后面
-     * @return {Promise.<TResult>} 成功: resolve(data, status, statusText), 失败: reject(status, statusText)
-     */
-    get(params){
-        return this.getToken().then(res => {
-            let token = res["accessToken"];
-            params.headers = params.headers || {};
-            params.headers["Authorization"] = "Bearer" + token;
-            return ajax.get(params).catch((status, statusText) => {
-                if (status == 401) {
-                    return this.refreshToken().then(res => {
-                        token = res["accessToken"];
-                        params.headers = params.headers || {};
-                        params.headers["Authorization"] = "Bearer" + token;
-                        return ajax.get(params);
-                    });
-                } else {
-                    return Promise.reject(status, statusText);
-                }
-            });
-        });
-    },
-
-
-    /**
-     * 发送POST请求
-     * @param params {object} 请求参数
-     * @param params.url {string} 请求的URL
-     * @param params.headers {object} 请求头, Content-Type默认值是 application/x-www-form-urlencoded
-     * @param params.type {string} 响应类型, json(默认),text
-     * @param params.data {object} 请求数据，带到 HTTP body中
-     * @return {Promise.<TResult>} 成功: resolve(data, status, statusText), 失败: reject(status, statusText)
-     */
-    post(params){
-        return this.getToken().then(res => {
-            let token = res["accessToken"];
-            params.headers = params.headers || {};
-            params.headers["Authorization"] = "Bearer" + token;
-            return ajax.post(params).catch((status, statusText) => {
-                if (status == 401) {
-                    return this.refreshToken().then(res => {
-                        token = res["accessToken"];
-                        params.headers = params.headers || {};
-                        params.headers["Authorization"] = "Bearer" + token;
-                        return ajax.get(params);
-                    });
-                } else {
-                    return Promise.reject(status, statusText);
-                }
-            });
-        });
     }
+
 }
 
 module.exports = linkapi;
