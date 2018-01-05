@@ -46,10 +46,10 @@ var linkapi = {
         return new Promise((resolve, reject) => {
             link.getToken([], res => {
                 resolve(res);
-                success(res);
+                success && success(res);
             }, err => {
                 reject(err);
-                error(err);
+                error && error(err);
             });
         });
     },
@@ -65,10 +65,10 @@ var linkapi = {
         return new Promise((resolve, reject) => {
             link.refreshToken([], res => {
                 resolve(res);
-                success(res);
+                success && success(res);
             }, err => {
                 reject(err);
-                error(err);
+                error && error(err);
             });
         });
     },
@@ -316,7 +316,7 @@ var linkapi = {
 
 
     /**
-     * @class 部门/组织
+     * @class 组织
      */
 
     /**
@@ -1020,7 +1020,7 @@ var linkapi = {
                         token = res["accessToken"];
                         params.headers = params.headers || {};
                         params.headers["Authorization"] = "Bearer" + token;
-                        return ajax.get(params);
+                        return ajax.post(params);
                     });
                 } else {
                     return Promise.reject(status, statusText);
