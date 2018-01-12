@@ -1144,6 +1144,14 @@ var linkapi = {
      */
     getLanguage: function (callback) {
         link.getLanguage([], callback, null);
+    },
+
+    /**
+     * 注册广播接收器(目前android)，配合globalEvent使用
+     * @param key {string} 广播key
+     */
+    registerReceiver:function(key){
+        link.registerReceiver([key]);
     }
 
 }
