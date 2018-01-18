@@ -222,6 +222,33 @@ var linkapi = {
     },
 
     /**
+     * 打开一个群组公告详情
+     * @method openGroupBulletinDetail
+     * @param params {object} 参数
+     * @param params.bulletinId {string} 公告id
+     * @param params.groupId {string} 公告所属的群组id
+     * @param params.title {string} 公告标题
+     * @param params.content {string} 公告内容
+     * @param params.isImportant {boolean} 是否是重要公告
+     */
+    openGroupBulletinDetail:function(params){
+        link.openGroupBulletinDetail([params]);
+    },
+
+    /**
+     * 打开群公告发表界面
+     * @method startGroupBulletinEdit
+     * @param params {object} 参数
+     * @param params.groupId {string} 公告所属的群组id
+     * @param params.title {string} 公告标题
+     * @param params.content {string} 公告内容
+     * @param params.isImportant {boolean} 是否是重要公告
+     */
+    startGroupBulletinEdit:function(params){
+        link.startGroupBulletinEdit([params]);
+    },
+
+    /**
      * @class 部门
      */
 
@@ -1147,11 +1174,64 @@ var linkapi = {
     },
 
     /**
-     * 注册广播接收器(目前android)，配合globalEvent使用
-     * @param key {string} 广播key
+     * 发起选择文件资源
+     * @method selectFiles
+     * @param type {int} 范围0~3，0：拍照 1：选择图片  2 本地文件  3：云盘文件
+     * @param success {function} 成功回调函数
+     * @param error {function} 失败回调函数
      */
-    registerReceiver:function(key){
-        link.registerReceiver([key]);
+    selectFiles:function(type,success,error){
+        link.selectResourceFiles([type],success,error);
+    },
+
+    /**
+     * 发起资源上传
+     * @method uploadFiles
+     * @param resArray {object} 从selectFiles获取到的对象
+     * @param success {function} 成功回调函数
+     * @param error {function} 失败回调函数
+     */
+    uploadFiles:function(resArray,success,error){
+        link.uploadResourceFiles(resArray,success,error);
+    },
+
+    /**
+     * 打开/浏览上传后的资源
+     * @method openFile
+     * @param res {object} 资源对象
+     */
+    openFile:function(res){
+        link.openResourceFile([res])
+    },
+
+    /**
+     * 注册广播接收器。注册后可以通过key监听全局消息
+     * @method registerReceiver
+     * @param key {string} 广播接收器的code，可以传入服务号的code
+     * @param callback {function} 回调函数
+     */
+    registerReceiver:function(key,callback){
+        link.registerReceiver([key],callback);
+    },
+
+    /**
+     * 更新消息界面tab的角标
+     * @method updateMessageTabBadge
+     * @param params {object} 参数
+     * @param params.appCode {string} 编码,如业务大厅编码businesscenter
+     * @param params.unReadCount {int}  消息数量
+     */
+    updateMessageTabBadge:function(params){
+        link.updateMessageTabBadge([params]);
+    },
+
+    /**
+     * 发送退出应用事件
+     * @method sendExitEvent
+     * @param code {string} 应用appcode
+     */
+    sendExitEvent:function(code){
+        link.sendExitEvent([code]);
     }
 
 }
