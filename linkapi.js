@@ -613,11 +613,14 @@ var linkapi = {
                 urlParams += (key + "=" + encodeURIComponent(params[key]) + "&");
             }
         }
-        if (params.appUrl) {
-            if (url.indexOf('?') < 0) {
-                url += "?";
+        //weex应用才将参数加到url后面
+        if(url.endsWith("js")){
+            if (params.appUrl) {
+                if (url.indexOf('?') < 0) {
+                    url += "?";
+                }
+                url += urlParams;
             }
-            url += urlParams;
         }
         params = "[OpenApp]\nappCode=" + params.appCode + (params.appUrl ? "\nappUrl=" + url : "") + dataStr;
         link.launchLinkService([params], success, error);
