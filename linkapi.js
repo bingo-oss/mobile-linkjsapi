@@ -1211,10 +1211,9 @@ var linkapi = {
      * 注册广播接收器。注册后可以通过key监听全局消息
      * @method registerReceiver
      * @param key {string} 广播接收器的code，可以传入服务号的code
-     * @param callback {function} 回调函数
      */
-    registerReceiver:function(key,callback){
-        link.registerReceiver([key],callback);
+    registerReceiver:function(key){
+        link.registerReceiver([key]);
     },
 
     /**
