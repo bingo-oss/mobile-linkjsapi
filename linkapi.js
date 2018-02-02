@@ -1234,6 +1234,14 @@ var linkapi = {
      */
     sendExitEvent:function(code){
         link.sendExitEvent([code]);
+    },
+
+    /**
+     * 取消指定聊天对象的通知栏信息
+     * @param id  可以是私聊、群组、服务号等聊天对象Id
+     */
+    cancelMsgNtf:function (id) {
+      link.cancelMsgNtf([id]);
     }
 
 }
