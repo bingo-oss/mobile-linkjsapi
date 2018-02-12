@@ -286,7 +286,7 @@ var linkapi = {
      * 发送服务号公告
      * @method sendServiceAccountNotice
      * @param accountId {string} 服务号id
-     * @param bulletinType {int} 公告类型(1文字,2图片,3语音) | 不传此参数时先进入公告类型选择页面
+     * @param bulletinType {number} 公告类型(1文字,2图片,3语音) | 不传此参数时先进入公告类型选择页面
      */
     sendServiceAccountNotice: function (accountId, bulletinType) {
         link.launchLinkServiceWithDictionary([{
@@ -350,8 +350,8 @@ var linkapi = {
      * 根据部门id获取用户信息以及子部门信息
      * @method getChildListByOrgId
      * @param orgId {string} 部门id
-     * @param page {int} 页码，从1开始
-     * @param pagesize {int} 页数
+     * @param page {number} 页码，从1开始
+     * @param pagesize {number} 页数
      * @param success {function} 成功，返回某部门下的用户以及子部门
      * @param error {function} 失败回调函数，返回错误字符串
      */
@@ -373,7 +373,7 @@ var linkapi = {
     /**
      * 执行同步服务
      * @method execSyncService
-     * @param type{int} 同步类型。 0：用户信息同步，1：群组信息同步，2：部门信息同步，3：服务号信息同步，4：好友企业同步，5：应用同步
+     * @param type{number} 同步类型。 0：用户信息同步，1：群组信息同步，2：部门信息同步，3：服务号信息同步，4：好友企业同步，5：应用同步
      * @param success {function} 成功，返回状态
      * @param error {function} 失败回调函数，返回错误字符串
      */
@@ -389,7 +389,7 @@ var linkapi = {
      * 调用平台选人界面(单选)
      * @method startContactSingleSelector
      * @param  {string} title  选人界面说明文本
-     * @param  {int} dataType  选项: 1-用户,2-群组,3-用户+群组,4-部门(组织),5-用户+组织,8-服务号
+     * @param  {number} dataType  选项: 1-用户,2-群组,3-用户+群组,4-部门(组织),5-用户+组织,8-服务号
      * @param  {object} extraParams 扩展参数
      * @param  {function} success 成功回调函数,返回用户信息
      * @param  {function} error   失败回调函数,返回失败原因
@@ -406,7 +406,7 @@ var linkapi = {
      * 调用平台选人界面(多选)
      * @method startContactMulitSelector
      * @param  {string} title  选人界面说明文本
-     * @param  {int} dataType  选项: 1-用户,2-群组,3-用户+群组,4-部门(组织),5-用户+组织,8-服务号
+     * @param  {number} dataType  选项: 1-用户,2-群组,3-用户+群组,4-部门(组织),5-用户+组织,8-服务号
      * @param  {object} extraParams 扩展参数
      * @param  {function} success 成功回调函数,返回用户信息
      * @param  {function} error   失败回调函数,返回失败原因
@@ -498,7 +498,7 @@ var linkapi = {
      * @param options {object} 动态参数
      * @param options.authorID {string} 发表动态的对象id ， 可以是用户或用户运营的服务号 （不写默认是当前用户）
      * @param options.content {string} 动态内容
-     * @param options.privateType {int}  私密类型 ， 0 群组，  1 部门， 2 个人 ， 3 项目  ， 4公开 （默认类型）
+     * @param options.privateType {number}  私密类型 ， 0 群组，  1 部门， 2 个人 ， 3 项目  ， 4公开 （默认类型）
      * @param options.privateInstanceID {string}  私密对象id
      * @param options.privateName {string} 私密对象名称
      * @param options.labelIds {string} 'id1,id2,id3'动态的标签id（可选）
@@ -1179,7 +1179,7 @@ var linkapi = {
     /**
      * 发起选择文件资源
      * @method selectFiles
-     * @param type {int} 范围0~3，0：拍照 1：选择图片  2 本地文件  3：云盘文件
+     * @param type {number} 范围0~3，0：拍照 1：选择图片  2 本地文件  3：云盘文件
      * @param success {function} 成功回调函数
      * @param error {function} 失败回调函数
      */
@@ -1210,10 +1210,11 @@ var linkapi = {
     /**
      * 注册广播接收器。注册后可以通过key监听全局消息
      * @method registerReceiver
-     * @param key {string} 广播接收器的code，可以传入服务号的code
+     * @param type {number} 聊天类型 私聊=1 群组=2 部门=4 服务号=5
+     * @param key {string} 广播接收器的code，可以传入服务号的code,type=5时, 为服务号的code,否则为talkWithId
      */
-    registerReceiver:function(key){
-        link.registerReceiver([key]);
+    registerReceiver:function(type,key){
+        link.registerReceiver([type,key]);
     },
 
     /**
@@ -1221,7 +1222,7 @@ var linkapi = {
      * @method updateMessageTabBadge
      * @param params {object} 参数
      * @param params.appCode {string} 编码,如业务大厅编码businesscenter
-     * @param params.unReadCount {int}  消息数量
+     * @param params.unReadCount {number}  消息数量
      */
     updateMessageTabBadge:function(params){
         link.updateMessageTabBadge([params]);
@@ -1238,10 +1239,19 @@ var linkapi = {
 
     /**
      * 取消指定聊天对象的通知栏信息
-     * @param id  可以是私聊、群组、服务号等聊天对象Id
+     * @param id {string}  可以是私聊、群组、服务号等聊天对象Id
      */
     cancelMsgNtf:function (id) {
       link.cancelMsgNtf([id]);
+    },
+
+    /**
+     * 设置聊天界面右上角的气泡未读数
+     * @param id {string} 可以是私聊、群组、服务号等聊天对象Id
+     * @param tip {string} 未读数或者文本
+     */
+    setChatActionTip:function (id,tip) {
+        link.setChatActionTip([id,tip]);
     }
 
 }
