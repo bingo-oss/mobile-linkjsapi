@@ -8,10 +8,6 @@ let ajax = {
             let data = params.data || {};
             let type = params.type || "json";
 
-            if (typeof data == "object") {
-                data = JSON.stringify(data);
-            }
-
             if(method=="GET"){
                 if (!url.includes("?")) {
                     url += "?";
@@ -24,13 +20,19 @@ let ajax = {
             }
             // headers["Content-Type"]="application/x-www-form-urlencoded";
             // headers["Content-Type"]="application/json";
-            stream.fetch({
+            let reqParam={
                 method:method,
                 type: type,
                 url: url,
-                headers: headers,
-                body: data
-            }, (res) => {
+                headers: headers
+            };
+            if(method!="GET"){
+                if (typeof data == "object") {
+                    data = JSON.stringify(data);
+                }
+                reqParam["body"]=data;
+            }
+            stream.fetch(reqParam, (res) => {
                 if (res.ok) {
                     resolve(res.data, res.status, res.statusText);
                 } else {
