@@ -408,11 +408,12 @@ var linkapi = {
      * @param  {string} title  选人界面说明文本
      * @param  {number} dataType  选项: 1-用户,2-群组,3-用户+群组,4-部门(组织),5-用户+组织,8-服务号
      * @param  {object} extraParams 扩展参数
+     * @param  {array} extraHeadItems 扩展界面参数，例如新增选项项目，可自定义指令 [{title:'xx',action:'xx'}]
      * @param  {function} success 成功回调函数,返回用户信息
      * @param  {function} error   失败回调函数,返回失败原因
      * @return {object}  包含字段: name,type,id(即userId)
      */
-    startContactMulitSelector: function (title, dataType, extraParams, success, error) {
+    startContactMulitSelector: function (title, dataType, extraParams, success, error,extraHeadItems) {
         extraParams = extend({
             userSelected: [],
             groupSelected: [],
@@ -422,8 +423,40 @@ var linkapi = {
             organizationIgnore: [],
             isIncludeDisableUser: false
         }, extraParams);
-        link.startContactMulitSelector([title, dataType, extraParams], success, error);
+        extraHeadItems=extraHeadItems||{};
+        link.startContactMulitSelector([title, dataType, extraParams,extraHeadItems], success, error);
     },
+
+    /**
+     * 选人界面扩展方法:获取已选择的人
+     * @method getSelectedListContactSelector
+     * @param callback {function} callback
+     */
+    getSelectedListContactSelector:function (callback) {
+        link.getSelectedList_ContactSelector([],callback);
+    },
+
+    /**
+     * 选人界面扩展方法:添加选择的人
+     * @param model {object} id,name,icon,type
+     */
+    addSelectedContactSelector:function (model) {
+      link.addSelected_ContactSelector([model]);
+    },
+
+    /**
+     * 选人界面扩展方法:移除选择的人
+     * @param model {object} id,name,icon,type
+     */
+    removeSelected_ContactSelector:function (model) {
+        link.removeSelected_ContactSelector([model]);
+    },
+
+    /**
+     * 选人界面扩展事件：监听全局移除事件
+     * @event onRemoveFromSelectedArea
+     * @param model {object} 选择的model，包含id,name,icon,type
+     */
 
     /**
      * 打开指定userId用户的名片
@@ -1264,10 +1297,20 @@ var linkapi = {
 
     /**
      * 取消指定聊天对象的通知栏信息
+     * @method cancelMsgNtf
      * @param id {string}  可以是私聊、群组、服务号等聊天对象Id
      */
     cancelMsgNtf:function (id) {
       link.cancelMsgNtf([id]);
+    },
+
+    /**
+     * 根据类型清除通知栏的通知
+     * @method cancelMsgNtfByCategoryId
+     * @param categoryId
+     */
+    cancelMsgNtfByCategoryId:function (categoryId) {
+        link.cancelMsgNtfByCategoryId([categoryId]);
     },
 
     /**
@@ -1277,7 +1320,22 @@ var linkapi = {
      */
     setChatActionTip:function (id,tip) {
         link.setChatActionTip([id,tip]);
+    },
+
+    /**
+     * 发送消息通用方法
+     * @param msgObj {object}
+     * @param msgObj.toCompany {string} 对应企业code
+     * @param msgObj.toId {string} 指定对象id
+     * @param msgObj.toName {string} 指定对象名称
+     * @param msgObj.toType {string} 指定对象类型
+     * @param msgObj.content {string} 消息体（todo)
+     * @param msgObj.msgType {string} 消息类型 (todo)
+     */
+    sendMessage:function (msgObj,success,error) {
+        link.sendMessage([msgObj],success,error);
     }
+
 
 }
 
