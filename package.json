@@ -1,6 +1,6 @@
 {
   "name": "linkapi",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Link平台提供给小程序开发者&轻应用开发者的jsapi",
   "main": "linkapi.js",
   "scripts": {},

@@ -1334,8 +1334,19 @@ var linkapi = {
      */
     sendMessage:function (msgObj,success,error) {
         link.sendMessage([msgObj],success,error);
-    }
+    },
 
+
+    /**
+     * 读取文件文本内容
+     * @param filePath {string} 文件路径
+     * @param charset {string} 编码方式 utf-8 或者 gb2312
+     * @param success {function} 成功回调函数，返回文本内容
+     * @param error {function} 失败回调函数，返回错误信息
+     */
+    readTextFromFile:function (filePath,charset,success,error) {
+        link.readTextFromFile([filePath, charset],success,error);
+    }
 
 }
 
