@@ -1345,6 +1345,7 @@ var linkapi = {
      * @param error {function} 失败回调函数，返回错误信息
      */
     readTextFromFile:function (filePath,charset,success,error) {
+        filePath=filePath.replace('file:','');
         link.readTextFromFile([filePath, charset],success,error);
     }
 
