@@ -7,6 +7,7 @@ let ajax = {
             let headers = params.headers || {};
             let data = params.data || {};
             let type = params.type || "json";
+            let timeout = params.timeout || 30000;
 
             if(method=="GET"){
                 if (!url.includes("?")) {
@@ -24,7 +25,8 @@ let ajax = {
                 method:method,
                 type: type,
                 url: url,
-                headers: headers
+                headers: headers,
+                timeout:timeout
             };
             if(method!="GET"){
                 if (typeof data == "object") {
