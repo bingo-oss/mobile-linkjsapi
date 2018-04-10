@@ -1242,7 +1242,10 @@ var linkapi = {
      * @param error {function} 失败回调函数
      */
     selectFiles:function(type,success,error){
-        link.selectResourceFiles([type],success,error);
+        try{
+            link.selectResourceFiles([type],success,error);
+        }catch (e){
+        }
     },
 
     /**
@@ -1253,7 +1256,11 @@ var linkapi = {
      * @param error {function} 失败回调函数
      */
     uploadFiles:function(resArray,success,error){
-        link.uploadResourceFiles(resArray,success,error);
+        try{
+            link.uploadResourceFiles(resArray,success,error);
+        }catch (e){
+
+        }
     },
 
     /**
@@ -1262,7 +1269,12 @@ var linkapi = {
      * @param res {object} 资源对象
      */
     openFile:function(res){
-        link.openResourceFile([res])
+        try{
+            link.openResourceFile([res])
+        }catch (e){
+
+        }
+
     },
 
     /**
@@ -1272,7 +1284,10 @@ var linkapi = {
      * @param key {string} 广播接收器的code，可以传入服务号的code,type=5时, 为服务号的code,否则为talkWithId
      */
     registerReceiver:function(type,key){
-        link.registerReceiver([type,key]);
+        try{
+            link.registerReceiver([type,key]);
+        }catch (e){
+        }
     },
 
     /**
@@ -1283,7 +1298,11 @@ var linkapi = {
      * @param params.unReadCount {number}  消息数量
      */
     updateMessageTabBadge:function(params){
-        link.updateMessageTabBadge([params]);
+        try{
+            link.updateMessageTabBadge([params]);
+        }catch (e){
+
+        }
     },
 
     /**
@@ -1292,7 +1311,11 @@ var linkapi = {
      * @param code {string} 应用appcode
      */
     sendExitEvent:function(code){
-        link.sendExitEvent([code]);
+        try{
+            link.sendExitEvent([code]);
+        }catch (e){
+
+        }
     },
 
     /**
@@ -1301,7 +1324,11 @@ var linkapi = {
      * @param id {string}  可以是私聊、群组、服务号等聊天对象Id
      */
     cancelMsgNtf:function (id) {
-      link.cancelMsgNtf([id]);
+        try{
+            link.cancelMsgNtf([id]);
+        }catch (e){
+
+        }
     },
 
     /**
@@ -1310,7 +1337,11 @@ var linkapi = {
      * @param categoryId
      */
     cancelMsgNtfByCategoryId:function (categoryId) {
-        link.cancelMsgNtfByCategoryId([categoryId]);
+        try{
+            link.cancelMsgNtfByCategoryId([categoryId]);
+        }catch (e){
+
+        }
     },
 
     /**
@@ -1319,7 +1350,11 @@ var linkapi = {
      * @param tip {string} 未读数或者文本
      */
     setChatActionTip:function (id,tip) {
-        link.setChatActionTip([id,tip]);
+        try{
+            link.setChatActionTip([id,tip]);
+        }catch (e){
+
+        }
     },
 
     /**
@@ -1333,7 +1368,11 @@ var linkapi = {
      * @param msgObj.msgType {string} 消息类型 (todo)
      */
     sendMessage:function (msgObj,success,error) {
-        link.sendMessage([msgObj],success,error);
+        try{
+            link.sendMessage([msgObj],success,error);
+        }catch (e){
+
+        }
     },
 
 
@@ -1345,8 +1384,12 @@ var linkapi = {
      * @param error {function} 失败回调函数，返回错误信息
      */
     readTextFromFile:function (filePath,charset,success,error) {
-        filePath=filePath.replace('file:','');
-        link.readTextFromFile([filePath, charset],success,error);
+        try{
+            filePath=filePath.replace('file:','');
+            link.readTextFromFile([filePath, charset],success,error);
+        }catch (e){
+
+        }
     }
 
 }
