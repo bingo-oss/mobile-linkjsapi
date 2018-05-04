@@ -1375,20 +1375,23 @@ var linkapi = {
         }
     },
 
-
     /**
      * 读取文件文本内容
-     * @param filePath {string} 文件路径
+     * @param filePath {string} 文件路径，远程或者本地
      * @param charset {string} 编码方式 utf-8 或者 gb2312
      * @param success {function} 成功回调函数，返回文本内容
      * @param error {function} 失败回调函数，返回错误信息
      */
     readTextFromFile:function (filePath,charset,success,error) {
-        try{
-            filePath=filePath.replace('file:','');
-            link.readTextFromFile([filePath, charset],success,error);
-        }catch (e){
-
+        if(filePath.startsWith("http")){
+            ajax.exec("GET",{url:filePath}).then(success).catch(error);
+        }else{
+            try{
+                filePath=filePath.replace('file:','');
+                link.readTextFromFile([filePath, charset],success,error);
+            }catch (e){
+                
+            }
         }
     }
 
