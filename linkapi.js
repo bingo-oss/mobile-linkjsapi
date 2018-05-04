@@ -1388,9 +1388,18 @@ var linkapi = {
         }else{
             try{
                 filePath=filePath.replace('file:','');
-                link.readTextFromFile([filePath, charset],success,error);
+                link.readTextFromFile([filePath, charset],(res)=>{
+                    try{
+                        if(typeof res=="string"){
+                            res=JSON.parse(res);
+                        }
+                        success(res);
+                    }catch(e){
+                        error(e);
+                    }
+                },error);
             }catch (e){
-                
+                error(e);
             }
         }
     }
