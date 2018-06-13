@@ -616,10 +616,23 @@ var linkapi = {
         }], null, null);
     },
 
+    /**
+     * 打开个人动态主页
+     */
     openMyMicroblog: function () {
         link.launchLinkServiceWithDictionary([{
             code: "OpenBuiltIn",
             key: "MyMicroBlog"
+        }], null, null);
+    },
+
+    /**
+     * 打开动态主页
+     */
+    openMicroblogCenter: function () {
+        link.launchLinkServiceWithDictionary([{
+            code: "OpenBuiltIn",
+            key: "DcMicroBlog"
         }], null, null);
     },
 
@@ -1026,6 +1039,17 @@ var linkapi = {
      */
     openDiskFileDetail: function (diskFileId, shareInfo, success, error) {
         link.openDiskFileDetail([diskFileId, shareInfo], success, error);
+    },
+
+    /**
+     * 打开云盘
+     */
+    openDisk: function () {
+        link.launchLinkServiceWithDictionary([{
+            code: "OpenBuiltIn",
+            key: "StartNewDisk",
+            naviStyle:3
+        }], null, null);
     },
 
     /**
