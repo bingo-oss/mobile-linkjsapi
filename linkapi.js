@@ -1120,9 +1120,9 @@ var linkapi = {
      * @method delete
      * @param params {object} 请求参数
      * @param params.url {string} 请求的URL
-     * @param params.headers {object} 请求头, Content-Type默认值是 application/x-www-form-urlencoded
+     * @param params.headers {object} 请求头
      * @param params.type {string} 响应类型, json(默认),text
-     * @param params.data {object} 请求数据，带到 HTTP body中
+     * @param params.data {object} 请求数据，自动拼接到url后面
      * @return {Promise.<TResult>} 成功: resolve(data, status, statusText), 失败: reject(status, statusText)
      */
     delete(params){
@@ -1131,7 +1131,7 @@ var linkapi = {
 
     /**
      * 发送PUT请求
-     * @method post
+     * @method put
      * @param params {object} 请求参数
      * @param params.url {string} 请求的URL
      * @param params.headers {object} 请求头, Content-Type默认值是 application/x-www-form-urlencoded
