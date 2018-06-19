@@ -1438,9 +1438,17 @@ var linkapi = {
         }catch (e){
 
         }
+    },
+
+    /**
+     * 打开语音助手
+     */
+    openSpeechAssistant: function () {
+        link.launchLinkServiceWithDictionary([{
+            code: "OpenBuiltIn",
+            key: "SpeechAssistant"
+        }], null, null);
     }
-
-
 
 
 }
