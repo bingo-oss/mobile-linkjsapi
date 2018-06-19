@@ -1426,7 +1426,22 @@ var linkapi = {
                 error(e);
             }
         }
+    },
+
+    /**
+     * 打开搜索界面
+     * @param keyword {string} 关键字
+     */
+    startSearch:function (keyword) {
+        try{
+            link.startSearch([keyword],null,null);
+        }catch (e){
+
+        }
     }
+
+
+
 
 }
 
