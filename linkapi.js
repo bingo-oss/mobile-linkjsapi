@@ -1448,7 +1448,32 @@ var linkapi = {
             code: "OpenBuiltIn",
             key: "SpeechAssistant"
         }], null, null);
+    },
+
+    /**
+     * 获取Link登录的cookie信息
+     */
+    getLoginCookies: function (success,error) {
+        link.getLoginCookies([],success,error)
+    },
+
+    /**
+     * 获取需要授权认证的url
+     */
+    getDomainRequireAuthUrls: function (success,error) {
+        link.getDomainRequireAuthUrls([],success,error);
+    },
+
+    /**
+     * 获取link图片物理地址,根据内部定的协议获取真实的物理地址
+     * @param image 图片标识例如 dist://xxx.png, store://xxx.png ,  iconxxx.png
+     * @param success 返回图片路径
+     * @param error 错误信息
+     */
+    getImage: function (image, success, error) {
+        link.getImage([image],success,error);
     }
+
 
 
 }
