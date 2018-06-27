@@ -1472,8 +1472,54 @@ var linkapi = {
      */
     getImage: function (image, success, error) {
         link.getImage([image],success,error);
-    }
+    },
 
+    /**
+     * 发起聊天
+     * @method startChat
+     */
+    startChat: function () {
+        link.launchLinkServiceWithDictionary([{
+            code: "StartChat"//固定参数
+        }], null, null);
+    },
+
+    /**
+     * 打开待办待阅
+     * @method unityTodo
+     * @params defaultIndex 0(待办)/1（待阅）/2（已办）
+     */
+    openTodo: function (params) {
+        link.launchLinkServiceWithDictionary([{
+            code: "UnityTodo",//固定参数
+            defaultIndex : params.defaultIndex
+        }], null, null);
+    },
+
+    /**
+     * 打开邮箱
+     * @method startEmail
+     */
+    startEmail: function () {
+        link.launchLinkServiceWithDictionary([{
+            code: "OpenBuiltIn",//固定参数
+            key : "StartEmail"
+        }], null, null);
+    },
+
+    /**
+     * 获取未读邮箱条数
+     * @method startEmail
+     * @param success {function} 成功回调函数，返回文本内容
+     * @param error {function} 失败回调函数，返回错误信息
+     */
+    getEmailUnreadCount : function (success,error) {
+        try{
+            link.getEmailUnreadCount(success,error);
+        }catch (e){
+
+        }
+    }
 
 
 }
