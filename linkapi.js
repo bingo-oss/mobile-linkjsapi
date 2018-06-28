@@ -967,6 +967,21 @@ var linkapi = {
      * @param params.file {string} 存储服务的文件id
      * @param params.picture {string} 图片http地址
      * @param params.action {string} 执行指令
+     *
+     * @example
+     * 分享网页
+     * {
+     *    title:"标题",
+     *    type:"WEBSITE",
+     *    content:"http://domain/path",
+     * }
+     *
+     * 分享打开应用
+     * {
+     *    title:"标题",
+     *    type:"ACTION",
+     *    content:"[OpenApp]\nappCode=xxxx\nappUrl=xxxx"
+     * }
      */
     share: function (params, success, error) {
         if (params.type == "picture") params.icon = params.content;
@@ -1519,9 +1534,18 @@ var linkapi = {
         }catch (e){
 
         }
+    },
+
+    /**
+     * 打开在线客服
+     * @method openOnlineServicer
+     */
+    openOnlineServicer: function () {
+        link.launchLinkServiceWithDictionary([{
+            code: "OpenBuiltIn",
+            key : "OnlineServicer"
+        }], null, null);
     }
-
-
 }
 
 module.exports = linkapi;
