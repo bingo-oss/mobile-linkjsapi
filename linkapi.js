@@ -673,6 +673,14 @@ var linkapi = {
     },
 
     /**
+     * 执行指令的接口
+     * @method launchLinkService
+    */
+    launchLinkService : function (params, success, error) {
+        link.launchLinkService([params], success, error);
+    },
+
+    /**
      * 打开应用中心
      * @method openAppMarket
      */
