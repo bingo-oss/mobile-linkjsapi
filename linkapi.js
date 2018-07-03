@@ -684,6 +684,17 @@ var linkapi = {
     },
 
     /**
+     * 打开收藏应用中心
+     * @method openServiceMarketDesktop
+     */
+    openServiceMarketDesktop: function () {
+        link.launchLinkServiceWithDictionary([{
+            code: "OpenBuiltIn",
+            key: "ServiceMarketDesktop"
+        }], null, null);
+    },
+
+    /**
      * 获取本地收藏的应用
      * @method getFavoriteApp
      * @param success {function} 成功获取数据回调
