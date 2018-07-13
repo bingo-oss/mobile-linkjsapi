@@ -15,7 +15,7 @@ var extend = function (obj, ext) {
 
 /**
  * Link平台提供的功能接口，使用该模块需要安装linkapi模块（ npm install linkapi --save ）
- * @module 平台接口
+ * @namespace linkapi
  */
 
 var linkapi = {
@@ -622,7 +622,7 @@ var linkapi = {
     openMyMicroblog: function () {
         link.launchLinkServiceWithDictionary([{
             code: "OpenBuiltIn",
-            key: "MyMicroBlog"
+            key: "MicroBlog"
         }], null, null);
     },
 
