@@ -1,7 +1,53 @@
 var link = weex.requireModule("LinkModule");
 var schedule = weex.requireModule("ScheduleModule");
 var platform = weex.config.env.platform;
-var ajax = require("./ajax.js");
+const stream = weex.requireModule('stream');
+
+let ajax = {
+    exec(method,params){
+        return new Promise((resolve, reject) => {
+            let url = params.url || "";
+            let headers = params.headers || {};
+            let data = params.data || {};
+            let type = params.type || "json";
+            let timeout = params.timeout || 30000;
+
+            if(method=="GET"){
+                if (!url.includes("?")) {
+                    url += "?";
+                }
+                if (typeof data == "object") {
+                    for (let key in data) {
+                        url += `&${key}=${encodeURIComponent(data[key])}`;
+                    }
+                }
+            }
+            // headers["Content-Type"]="application/x-www-form-urlencoded";
+            // headers["Content-Type"]="application/json";
+            let reqParam={
+                method:method,
+                type: type,
+                url: url,
+                headers: headers,
+                timeout:timeout
+            };
+            if(method!="GET"){
+                if (typeof data == "object") {
+                    data = JSON.stringify(data);
+                }
+                reqParam["body"]=data;
+            }
+            stream.fetch(reqParam, (res) => {
+                if (res.ok) {
+                    resolve(res.data, res.status, res.statusText);
+                } else {
+                    reject(res.status, res.statusText);
+                }
+            });
+        });
+    }
+}
+
 
 var extend = function (obj, ext) {
     var key;
@@ -15,7 +61,7 @@ var extend = function (obj, ext) {
 
 /**
  * Link平台提供的功能接口，使用该模块需要安装linkapi模块（ npm install linkapi --save ）
- * @namespace linkapi
+ * @module 平台接口
  */
 
 var linkapi = {
@@ -622,7 +668,7 @@ var linkapi = {
     openMyMicroblog: function () {
         link.launchLinkServiceWithDictionary([{
             code: "OpenBuiltIn",
-            key: "MicroBlog"
+            key: "MyMicroBlog"
         }], null, null);
     },
 
@@ -673,14 +719,6 @@ var linkapi = {
     },
 
     /**
-     * 执行指令的接口
-     * @method launchLinkService
-    */
-    launchLinkService : function (params, success, error) {
-        link.launchLinkService([params], success, error);
-    },
-
-    /**
      * 打开应用中心
      * @method openAppMarket
      */
@@ -688,17 +726,6 @@ var linkapi = {
         link.launchLinkServiceWithDictionary([{
             code: "OpenBuiltIn",
             key: "DcService"
-        }], null, null);
-    },
-
-    /**
-     * 打开收藏应用中心
-     * @method openServiceMarketDesktop
-     */
-    openServiceMarketDesktop: function () {
-        link.launchLinkServiceWithDictionary([{
-            code: "OpenBuiltIn",
-            key: "ServiceMarketDesktop"
         }], null, null);
     },
 
@@ -801,6 +828,7 @@ var linkapi = {
             module: "MySelf"
         }], null, null);
     },
+    
 
     /**
      * 打开关于页面
@@ -986,21 +1014,6 @@ var linkapi = {
      * @param params.file {string} 存储服务的文件id
      * @param params.picture {string} 图片http地址
      * @param params.action {string} 执行指令
-     *
-     * @example
-     * 分享网页
-     * {
-     *    title:"标题",
-     *    type:"WEBSITE",
-     *    content:"http://domain/path",
-     * }
-     *
-     * 分享打开应用
-     * {
-     *    title:"标题",
-     *    type:"ACTION",
-     *    content:"[OpenApp]\nappCode=xxxx\nappUrl=xxxx"
-     * }
      */
     share: function (params, success, error) {
         if (params.type == "picture") params.icon = params.content;
@@ -1473,7 +1486,6 @@ var linkapi = {
 
         }
     },
-
     /**
      * 打开语音助手
      */
@@ -1483,7 +1495,59 @@ var linkapi = {
             key: "SpeechAssistant"
         }], null, null);
     },
+    /**
+     * 发起聊天
+     * @method startChat
+     */
+    startChat: function () {
+        link.launchLinkServiceWithDictionary([{
+            code: "StartChat"//固定参数
+        }], null, null);
+    },
+    /**
+     * 打开待办待阅
+     * @method unityTodo
+     * @params defaultIndex 0(待办)/1（待阅）/2（已办）
+     */
+    openTodo: function (params) {
+        link.launchLinkServiceWithDictionary([{
+            code: "UnityTodo",//固定参数
+            defaultIndex : params.defaultIndex
+        }], null, null);
+    },
+    /**
+     * 发起语音
+     * @method speechAssistant
+     */
+    speechAssistant: function () {
+        link.launchLinkServiceWithDictionary([{
+            code: "OpenBuiltIn",//固定参数
+            key : "SpeechAssistant"
+        }], null, null);
+    },
+    /**
+     * 打开邮箱
+     * @method startEmail
+     */
+    startEmail: function () {
+        link.launchLinkServiceWithDictionary([{
+            code: "OpenBuiltIn",//固定参数
+            key : "StartEmail"
+        }], null, null);
+    },
+    /**
+     * 获取未读邮箱条数
+     * @method startEmail
+     * @param success {function} 成功回调函数，返回文本内容
+     * @param error {function} 失败回调函数，返回错误信息
+     */
+    getEmailUnreadCount : function (success,error) {
+        try{
+            link.getEmailUnreadCount(success,error);
+        }catch (e){
 
+        }
+    },
     /**
      * 获取Link登录的cookie信息
      */
@@ -1507,54 +1571,16 @@ var linkapi = {
     getImage: function (image, success, error) {
         link.getImage([image],success,error);
     },
-
     /**
-     * 发起聊天
-     * @method startChat
+     * 打开我的页面
+     * @method openMe
      */
-    startChat: function () {
+    openMe: function () {
         link.launchLinkServiceWithDictionary([{
-            code: "StartChat"//固定参数
+            code: "OpenBuiltIn",
+            key: "MySelf",
         }], null, null);
     },
-
-    /**
-     * 打开待办待阅
-     * @method unityTodo
-     * @params defaultIndex 0(待办)/1（待阅）/2（已办）
-     */
-    openTodo: function (params) {
-        link.launchLinkServiceWithDictionary([{
-            code: "UnityTodo",//固定参数
-            defaultIndex : params.defaultIndex
-        }], null, null);
-    },
-
-    /**
-     * 打开邮箱
-     * @method startEmail
-     */
-    startEmail: function () {
-        link.launchLinkServiceWithDictionary([{
-            code: "OpenBuiltIn",//固定参数
-            key : "StartEmail"
-        }], null, null);
-    },
-
-    /**
-     * 获取未读邮箱条数
-     * @method startEmail
-     * @param success {function} 成功回调函数，返回文本内容
-     * @param error {function} 失败回调函数，返回错误信息
-     */
-    getEmailUnreadCount : function (success,error) {
-        try{
-            link.getEmailUnreadCount(success,error);
-        }catch (e){
-
-        }
-    },
-
     /**
      * 打开在线客服
      * @method openOnlineServicer
@@ -1564,7 +1590,22 @@ var linkapi = {
             code: "OpenBuiltIn",
             key : "OnlineServicer"
         }], null, null);
-    }
+    },
+     /**
+     * 执行指令的接口
+     * @method launchLinkService
+     */
+    launchLinkService : function (params, success, error) {
+        link.launchLinkService([params], success, error);
+    },
+
+
+
+    
+
+
+
+
 }
 
 module.exports = linkapi;
