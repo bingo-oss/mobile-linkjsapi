@@ -1489,7 +1489,7 @@ var linkapi = {
     /**
      * 打开语音助手
      */
-    openSpeechAssistant: function () {
+    speechAssistant: function () {
         link.launchLinkServiceWithDictionary([{
             code: "OpenBuiltIn",
             key: "SpeechAssistant"
