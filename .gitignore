@@ -2,9 +2,10 @@
 logs
 *.log
 npm-debug.log*
-package-lock.json
-.idea
-.DS_Store
-node_modules/*
-sample/.idea
-sample/.DS_Store
+
+**/package-lock.json
+*.DS_Store
+
+**/node_modules
+**/.idea
+**/dist
