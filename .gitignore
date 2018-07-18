@@ -6,3 +6,5 @@ package-lock.json
 .idea
 .DS_Store
 node_modules/*
+sample/.idea
+sample/.DS_Store
