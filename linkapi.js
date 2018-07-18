@@ -1,53 +1,7 @@
 var link = weex.requireModule("LinkModule");
 var schedule = weex.requireModule("ScheduleModule");
 var platform = weex.config.env.platform;
-const stream = weex.requireModule('stream');
-
-let ajax = {
-    exec(method,params){
-        return new Promise((resolve, reject) => {
-            let url = params.url || "";
-            let headers = params.headers || {};
-            let data = params.data || {};
-            let type = params.type || "json";
-            let timeout = params.timeout || 30000;
-
-            if(method=="GET"){
-                if (!url.includes("?")) {
-                    url += "?";
-                }
-                if (typeof data == "object") {
-                    for (let key in data) {
-                        url += `&${key}=${encodeURIComponent(data[key])}`;
-                    }
-                }
-            }
-            // headers["Content-Type"]="application/x-www-form-urlencoded";
-            // headers["Content-Type"]="application/json";
-            let reqParam={
-                method:method,
-                type: type,
-                url: url,
-                headers: headers,
-                timeout:timeout
-            };
-            if(method!="GET"){
-                if (typeof data == "object") {
-                    data = JSON.stringify(data);
-                }
-                reqParam["body"]=data;
-            }
-            stream.fetch(reqParam, (res) => {
-                if (res.ok) {
-                    resolve(res.data, res.status, res.statusText);
-                } else {
-                    reject(res.status, res.statusText);
-                }
-            });
-        });
-    }
-}
-
+var ajax = require("./ajax.js");
 
 var extend = function (obj, ext) {
     var key;
@@ -61,18 +15,18 @@ var extend = function (obj, ext) {
 
 /**
  * Link平台提供的功能接口，使用该模块需要安装linkapi模块（ npm install linkapi --save ）
- * @module 平台接口
+ * @namespace linkapi
  */
 
 var linkapi = {
 
-    /**
-     * @class 用户
-     */
+    // /**
+    //  * @class 用户
+    //  */
 
     /**
      * 获取登陆后的用户信息
-     * @method getLoginInfo
+     * @method linkapi.getLoginInfo
      * @param {function} success 成功回调，返回当前登录用户信息
      * @param {function} error 失败回调，返回获取失败原因
      * @return {object} 包含字段: loginId,userId,userName,orgId,orgName,email,telephone,eCode,picture,picture_local
@@ -83,7 +37,7 @@ var linkapi = {
 
     /**
      * 获取登录用户凭证 AccessToken
-     * @method getToken
+     * @method linkapi.getToken
      * @param {function} success 成功回调，返回当前Token对象 {access_token:''}
      * @param {function} error 失败回调，返回获取失败原因
      * @return {object} 包含字段: accessToken
@@ -102,7 +56,7 @@ var linkapi = {
 
     /**
      * 刷新平台的 AccessToken
-     * @method refreshToken
+     * @method linkapi.refreshToken
      * @param {function} success 成功回调，返回新的Token对象
      * @param {function} error 失败回调，返回获取失败原因
      * @return {object} 包含字段: accessToken
@@ -121,7 +75,7 @@ var linkapi = {
 
     /**
      * 获取指定userId的用户信息,支持批量获取
-     * @method getUserInfo
+     * @method linkapi.getUserInfo
      * @param  {string} id   用户userId,支持传入数组
      * @param  {function} success 成功回调函数，返回用户信息对象
      * @param  {function} error   失败回调函数，返回失败原因
@@ -137,7 +91,7 @@ var linkapi = {
 
     /**
      * 根据loginId获取userId
-     * @method getUserIdWithLoginId
+     * @method linkapi.getUserIdWithLoginId
      * @param {string} loginId 登录id
      * @param  {function} success 成功回调函数，返回用户信息对象
      * @param  {function} error   失败回调函数，返回失败原因
@@ -149,7 +103,7 @@ var linkapi = {
 
     /**
      * 根据手机或者邮箱获取用户信息
-     * @method getUserInfoByCellphoneOrEmail
+     * @method linkapi.getUserInfoByCellphoneOrEmail
      * @param key {string} 目前支持传入手机或者邮箱
      * @param success {function} 成功，返回用户信息
      * @param error {function} 失败回调函数，返回错误字符串
@@ -160,7 +114,7 @@ var linkapi = {
 
     /**
      * 该接口用于调用Link的用户聊天页面
-     * @method startUserChat
+     * @method linkapi.startUserChat
      * @param userId {string} 用户id
      * @param userName {string} 用户名称(可选)
      * @param ecode {string} 企业code(可选)
@@ -169,13 +123,13 @@ var linkapi = {
         link.startUserChat([userId, userName, ecode]);
     },
 
-    /**
-     * @class 群组
-     */
+    // /**
+    //  * @class 群组
+    //  */
 
     /**
      * 创建群组
-     * @method createGroup
+     * @method linkapi.createGroup
      * @param  {array} userIds 需要加入群组的用户userId, 传入数组
      * @param  {function} success 成功回调函数,返回创建成功的群组信息
      * @param  {function} error   失败回调函数,返回失败原因
@@ -199,10 +153,10 @@ var linkapi = {
 
     /**
      * 加入群组
-     * @method joinGroup
+     * @method linkapi.joinGroup
      * @param groupId {string} 群组Id
      * @param userIds {array} 用户userId
-     * @param success {function} 成功回调
+     * @param success {function} 成功回调,返回groupId
      * @param error {function} 失败回调函数，返回错误原因
      */
     joinGroup: function (groupId, userIds, success, error) {
@@ -211,7 +165,7 @@ var linkapi = {
 
     /**
      * 打开群组列表
-     * @method openGroupList
+     * @method linkapi.openGroupList
      */
     openGroupList: function () {
         link.launchLinkServiceWithDictionary([{
@@ -222,7 +176,7 @@ var linkapi = {
 
     /**
      * 打开群组的名片页面
-     * @method startGroupCard
+     * @method linkapi.startGroupCard
      * @param groupId {string} 群组id
      * @param success {function} 成功回调
      * @param error {function} 失败回调函数，返回错误原因
@@ -233,7 +187,7 @@ var linkapi = {
 
     /**
      * 打开群组发公告页面
-     * @method sendGroupNotice
+     * @method linkapi.sendGroupNotice
      * @param groupId {string} 群组id
      */
     sendGroupNotice: function (groupId) {
@@ -246,7 +200,7 @@ var linkapi = {
 
     /**
      * 打开群组公告列表
-     * @method openGroupNoticeList
+     * @method linkapi.openGroupNoticeList
      * @param groupId {string} 群组id
      */
     openGroupNoticeList: function (groupId) {
@@ -259,7 +213,7 @@ var linkapi = {
 
     /**
      * 该接口用于调用Link的群组聊天页面
-     * @method startGroupChat
+     * @method linkapi.startGroupChat
      * @param groupId {string} 群组id
      * @param groupName {string} 群组名称(可选)
      */
@@ -269,7 +223,7 @@ var linkapi = {
 
     /**
      * 打开一个群组公告详情
-     * @method openGroupBulletinDetail
+     * @method linkapi.openGroupBulletinDetail
      * @param params {object} 参数
      * @param params.bulletinId {string} 公告id
      * @param params.groupId {string} 公告所属的群组id
@@ -283,7 +237,7 @@ var linkapi = {
 
     /**
      * 打开群公告发表界面
-     * @method startGroupBulletinEdit
+     * @method linkapi.startGroupBulletinEdit
      * @param params {object} 参数
      * @param params.groupId {string} 公告所属的群组id
      * @param params.title {string} 公告标题
@@ -294,13 +248,13 @@ var linkapi = {
         link.startGroupBulletinEdit([params]);
     },
 
-    /**
-     * @class 部门
-     */
+    // /**
+    //  * @class 部门
+    //  */
 
     /**
      * 打开部门列表
-     * @method openOrgList
+     * @method linkapi.openOrgList
      * @param orgId {string} 部门id
      */
     openOrgList: function (orgId) {
@@ -313,8 +267,8 @@ var linkapi = {
 
     /**
      * 查看部门名片页
-     * @method openOrgCard
-     * @param orgId
+     * @method linkapi.openOrgCard
+     * @param orgId {string}
      */
     openOrgCard: function (orgId) {
         link.launchLinkServiceWithDictionary([{
@@ -324,13 +278,13 @@ var linkapi = {
         }], null, null);
     },
 
-    /**
-     * @class 服务号
-     */
+    // /**
+    //  * @class 服务号
+    //  */
 
     /**
      * 发送服务号公告
-     * @method sendServiceAccountNotice
+     * @method linkapi.sendServiceAccountNotice
      * @param accountId {string} 服务号id
      * @param bulletinType {number} 公告类型(1文字,2图片,3语音) | 不传此参数时先进入公告类型选择页面
      */
@@ -345,7 +299,7 @@ var linkapi = {
 
     /**
      * 查看服务号名片页
-     * @method openServiceAccountCard
+     * @method linkapi.openServiceAccountCard
      * @param accountId {string} 服务号id
      */
     openServiceAccountCard: function (accountId) {
@@ -358,7 +312,7 @@ var linkapi = {
 
     /**
      * 查看已关注服务号列表
-     * @method openServiceAccountList
+     * @method linkapi.openServiceAccountList
      */
     openServiceAccountList: function () {
         link.launchLinkServiceWithDictionary([{
@@ -369,7 +323,7 @@ var linkapi = {
 
     /**
      * 打开添加服务号页面
-     * @method addServiceAcccount
+     * @method linkapi.addServiceAcccount
      */
     addServiceAcccount: function () {
         link.launchLinkServiceWithDictionary([{
@@ -380,21 +334,22 @@ var linkapi = {
 
     /**
      * 打开服务号聊天界面
-     * @method startServiceAccountChat
+     * @method linkapi.startServiceAccountChat
      * @param accountId {String} 服务号id
+     * @param accountName {String} 服务号名 (可选)
      */
     startServiceAccountChat: function (accountId, accountName) {
         link.startServiceAccountChat([accountId, accountName]);
     },
 
 
-    /**
-     * @class 组织
-     */
+    // /**
+    //  * @class 组织
+    //  */
 
     /**
      * 根据部门id获取用户信息以及子部门信息
-     * @method getChildListByOrgId
+     * @method linkapi.getChildListByOrgId
      * @param orgId {string} 部门id
      * @param page {number} 页码，从1开始
      * @param pagesize {number} 页数
@@ -407,7 +362,7 @@ var linkapi = {
 
     /**
      * 根据部门id获取该部门的信息
-     * @method getDeptInfoById
+     * @method linkapi.getDeptInfoById
      * @param orgId {String} 部门id
      * @param success {function} 成功，返回部门信息
      * @param error {function} 失败回调函数，返回错误字符串
@@ -418,7 +373,7 @@ var linkapi = {
 
     /**
      * 执行同步服务
-     * @method execSyncService
+     * @method linkapi.execSyncService
      * @param type{number} 同步类型。 0：用户信息同步，1：群组信息同步，2：部门信息同步，3：服务号信息同步，4：好友企业同步，5：应用同步
      * @param success {function} 成功，返回状态
      * @param error {function} 失败回调函数，返回错误字符串
@@ -427,13 +382,13 @@ var linkapi = {
         link.execSyncService([type], success, error);
     },
 
-    /**
-     * @class 通讯录
-     */
+    // /**
+    //  * @class 通讯录
+    //  */
 
     /**
      * 调用平台选人界面(单选)
-     * @method startContactSingleSelector
+     * @method linkapi.startContactSingleSelector
      * @param  {string} title  选人界面说明文本
      * @param  {number} dataType  选项: 1-用户,2-群组,3-用户+群组,4-部门(组织),5-用户+组织,8-服务号
      * @param  {object} extraParams 扩展参数
@@ -450,14 +405,14 @@ var linkapi = {
 
     /**
      * 调用平台选人界面(多选)
-     * @method startContactMulitSelector
+     * @method linkapi.startContactMulitSelector
      * @param  {string} title  选人界面说明文本
      * @param  {number} dataType  选项: 1-用户,2-群组,3-用户+群组,4-部门(组织),5-用户+组织,8-服务号
      * @param  {object} extraParams 扩展参数
      * @param  {array} extraHeadItems 扩展界面参数，例如新增选项项目，可自定义指令 [{title:'xx',action:'xx'}]
      * @param  {function} success 成功回调函数,返回用户信息
      * @param  {function} error   失败回调函数,返回失败原因
-     * @return {object}  包含字段: name,type,id(即userId)
+     * @return {object}  包含字段: 1-{user:[{name:,userId:}]",2-{group:[{name:,groupId:}]},3-{user:[{name:,userId:}],group:[{name:,groupId:}]},4-{organization:[{name:,orgId:}]},5-{user:[{name:,userId:}],organization:[{name:,orgId:}]},8-4-{account:[{name:,accountId:}]}
      */
     startContactMulitSelector: function (title, dataType, extraParams, success, error,extraHeadItems) {
         extraParams = extend({
@@ -475,7 +430,7 @@ var linkapi = {
 
     /**
      * 选人界面扩展方法:获取已选择的人
-     * @method getSelectedListContactSelector
+     * @method linkapi.getSelectedListContactSelector
      * @param callback {function} callback
      */
     getSelectedListContactSelector:function (callback) {
@@ -484,14 +439,16 @@ var linkapi = {
 
     /**
      * 选人界面扩展方法:添加选择的人
+     * @method linkapi.addSelectedContactSelector
      * @param model {object} id,name,icon,type
      */
     addSelectedContactSelector:function (model) {
-      link.addSelected_ContactSelector([model]);
+        link.addSelected_ContactSelector([model]);
     },
 
     /**
      * 选人界面扩展方法:移除选择的人
+     * @method linkapi.removeSelected_ContactSelector
      * @param model {object} id,name,icon,type
      */
     removeSelected_ContactSelector:function (model) {
@@ -500,13 +457,13 @@ var linkapi = {
 
     /**
      * 选人界面扩展事件：监听全局移除事件
-     * @event onRemoveFromSelectedArea
+     * @event linkapi.onRemoveFromSelectedArea
      * @param model {object} 选择的model，包含id,name,icon,type
      */
 
     /**
      * 打开指定userId用户的名片
-     * @method startUserCard
+     * @method linkapi.startUserCard
      * @param  {string} id 用户userId
      */
     startUserCard: function (id) {
@@ -515,7 +472,7 @@ var linkapi = {
 
     /**
      * 打开通讯录页面
-     * @method openContactPage
+     * @method linkapi.openContactPage
      */
     openContactPage: function () {
         link.launchLinkServiceWithDictionary([{
@@ -524,13 +481,13 @@ var linkapi = {
         }], null, null);
     },
 
-    /**
-     * @class 消息
-     */
+    // /**
+    //  * @class 消息
+    //  */
 
     /**
      * 打开消息中心页面
-     * @method openMsgCenter
+     * @method linkapi.openMsgCenter
      */
     openMsgCenter: function () {
         link.launchLinkServiceWithDictionary([{
@@ -541,7 +498,7 @@ var linkapi = {
 
     /**
      * 获取未读消息总数
-     * @method getUnreadMessageCount
+     * @method linkapi.getUnreadMessageCount
      * @param success {function} 成功回调，返回数字
      * @param error {function} 失败回调,返回失败信息
      */
@@ -551,7 +508,7 @@ var linkapi = {
 
     /**
      * 该方法用于获取指定帐号id的未读消息数
-     * @method getUnreadMessageCountById
+     * @method linkapi.getUnreadMessageCountById
      * @param callback {function} 回调函数，返回未读消息数
      * @param talkWithId {string} 这里的帐号包括：用户的id，服务号的id，部门的id，群组的id
      */
@@ -560,17 +517,19 @@ var linkapi = {
     },
 
     /**
-     发送邀约消息（主要用在消息窗口）
-     @param params {toId:,toType:,title:,desc:,action_params:}
+     * 发送邀约消息（主要用在消息窗口）
+     * @method linkapi.sendInviteMessage
+     * @param params {Object} 详情如下
+     toId:,toType:,title:,desc:,action_params:
      */
     sendInviteMessage: function (params, success, error) {
         params = params || {};
         link.sendInviteMessage([params], success, error);
     },
 
-    /**
-     * @class 动态
-     */
+    // /**
+    //  * @class 动态
+    //  */
 
     /**
      * 发表动态
@@ -594,7 +553,7 @@ var linkapi = {
 
     /**
      * 打开某人动态主页
-     * @method openUserMicroblog
+     * @method linkapi.openUserMicroblog
      * @param userId {string} 用户id
      */
     openUserMicroblog: function (userId) {
@@ -607,7 +566,7 @@ var linkapi = {
 
     /**
      * 打开某群组动态主页
-     * @method openGroupMicroblog
+     * @method linkapi.openGroupMicroblog
      * @param groupId {string} 群组id
      */
     openGroupMicroblog: function (groupId) {
@@ -618,13 +577,18 @@ var linkapi = {
         }], null, null);
     },
 
+    // *
+    //  * 打开项目
+    //  * @method linkapi.startProjectDetail
+    //  * @param projectId {string} 项目id
+
     startProjectDetail: function (projectId, success, error) {
         link.startProjectDetail([projectId], success, error);
     },
 
     /**
      * 打开某服务号动态主页
-     * @method openServiceAccountMicroblog
+     * @method linkapi.openServiceAccountMicroblog
      * @param serviceId {string} 服务号id
      */
     openServiceAccountMicroblog: function (serviceId) {
@@ -638,7 +602,7 @@ var linkapi = {
 
     /**
      * 打开某话题动态主页
-     * @method openTopicMicroblog
+     * @method linkapi.openTopicMicroblog
      * @param topic {string} 话题名称
      */
     openTopicMicroblog: function (topic) {
@@ -651,7 +615,7 @@ var linkapi = {
 
     /**
      * 打开动态详情
-     * @method openMicroblogDetail
+     * @method linkapi.openMicroblogDetail
      * @param blogId {string} 动态id
      */
     openMicroblogDetail: function (blogId) {
@@ -662,9 +626,11 @@ var linkapi = {
         }], null, null);
     },
 
-    /**
-     * 打开个人动态主页
-     */
+    // *
+    //  * 接口废弃
+    //  * 打开个人动态主页
+    //  * @method linkapi.openMyMicroblog
+
     openMyMicroblog: function () {
         link.launchLinkServiceWithDictionary([{
             code: "OpenBuiltIn",
@@ -674,6 +640,7 @@ var linkapi = {
 
     /**
      * 打开动态主页
+     * @method linkapi.openMicroblogCenter
      */
     openMicroblogCenter: function () {
         link.launchLinkServiceWithDictionary([{
@@ -682,13 +649,13 @@ var linkapi = {
         }], null, null);
     },
 
-    /**
-     * @class 应用
-     */
+    // /**
+    //  * @class 应用
+    //  */
 
     /**
      * 该方法用于app里面启动app
-     * @method runApp
+     * @method linkapi.runApp
      * @param params{object} 启动应用的参数
      * @param params.appCode {string} 应用市场中填写的编码
      * @param params.appUrl {string} 启动页面地址
@@ -719,8 +686,16 @@ var linkapi = {
     },
 
     /**
+     * 执行指令的接口
+     * @method linkapi.launchLinkService
+     */
+    launchLinkService : function (params, success, error) {
+        link.launchLinkService([params], success, error);
+    },
+
+    /**
      * 打开应用中心
-     * @method openAppMarket
+     * @method linkapi.openAppMarket
      */
     openAppMarket: function () {
         link.launchLinkServiceWithDictionary([{
@@ -730,26 +705,45 @@ var linkapi = {
     },
 
     /**
+     * 打开收藏应用中心
+     * @method linkapi.openServiceMarketDesktop
+     */
+    openServiceMarketDesktop: function () {
+        link.launchLinkServiceWithDictionary([{
+            code: "OpenBuiltIn",
+            key: "ServiceMarketDesktop"
+        }], null, null);
+    },
+
+    /**
      * 获取本地收藏的应用
-     * @method getFavoriteApp
+     * @method linkapi.getFavoriteApp
      * @param success {function} 成功获取数据回调
      * @param error {function} 失败回调
      */
     getFavoriteApp: function (success, error) {
+        var successCallback = function (resp) {
+            if (typeof resp == "string") {
+                resp = JSON.parse(resp);
+                success(resp);
+            } else if (typeof resp == "object") {
+                success(resp);
+            }
+        }
         link.launchLinkServiceWithDictionary([{
             code: "Data",
             key: "GetFavoriteService"
-        }], success, error);
+        }], successCallback, error);
     },
 
 
-    /**
-     * @class 签到定位
-     */
+    // /**
+    //  * @class 签到定位
+    //  */
 
     /**
      * 打开“我要签到”界面
-     * @method startCheckIn
+     * @method linkapi.startCheckIn
      */
     startCheckIn: function () {
         var params = "[StartCheckin]\npushToListOnComplete=false";
@@ -758,7 +752,7 @@ var linkapi = {
 
     /**
      * 打开“签到列表”界面
-     * @method openCheckInList
+     * @method linkapi.openCheckInList
      */
     openCheckInList: function () {
         var params = "[OpenBuiltIn]\nkey=MyCheckIn";
@@ -767,7 +761,7 @@ var linkapi = {
 
     /**
      * 打开签到详情页面
-     * @method openCheckInDetail
+     * @method linkapi.openCheckInDetail
      * @param checkinId {string} 签到id
      */
     openCheckInDetail: function (checkinId) {
@@ -780,7 +774,7 @@ var linkapi = {
 
     /**
      * 打开地理定位界面，选择后返回
-     * @method startLocationSelect
+     * @method linkapi.startLocationSelect
      * @param params {object} 参数
      *   @param params.canDrag {bool} 是否可以通过拖动改变位置,默认false
      *   @param params.canSearch {bool} 是否具备搜索功能,默认true
@@ -802,13 +796,13 @@ var linkapi = {
         link.startLocationSelect([params], successCallback, error);
     },
 
-    /**
-     * @class 我的
-     */
+    // /**
+    //  * @class 我的
+    //  */
 
     /**
      * 打开个人信息修改页面
-     * @method openPersonEdit
+     * @method linkapi.openPersonEdit
      */
     openPersonEdit: function () {
         link.launchLinkServiceWithDictionary([{
@@ -819,7 +813,7 @@ var linkapi = {
 
     /**
      * 打开个人设置页面
-     * @method openSetting
+     * @method linkapi.openSetting
      */
     openSetting: function () {
         link.launchLinkServiceWithDictionary([{
@@ -828,11 +822,10 @@ var linkapi = {
             module: "MySelf"
         }], null, null);
     },
-    
 
     /**
      * 打开关于页面
-     * @method openAbout
+     * @method linkapi.openAbout
      */
     openAbout: function () {
         link.launchLinkServiceWithDictionary([{
@@ -843,7 +836,7 @@ var linkapi = {
 
     /**
      * 打开设置消息通知页面
-     * @method openStNotification
+     * @method linkapi.openStNotification
      */
     openStNotification: function () {
         link.launchLinkServiceWithDictionary([{
@@ -854,7 +847,7 @@ var linkapi = {
 
     /**
      * 打开设置手势锁屏页面
-     * @method openStGestureLock
+     * @method linkapi.openStGestureLock
      */
     openStGestureLock: function () {
         link.launchLinkServiceWithDictionary([{
@@ -865,7 +858,7 @@ var linkapi = {
 
     /**
      * 打开手势锁屏页面，如果没有设置，会先弹出设置界面，如果有设置，则直接弹出解锁页面
-     * @method checkGestureLock
+     * @method linkapi.checkGestureLock
      */
     checkGestureLock: function (success, error) {
         link.launchLinkServiceWithDictionary([{
@@ -876,7 +869,7 @@ var linkapi = {
 
     /**
      * 打开设置字体大小页面
-     * @method openStFont
+     * @method linkapi.openStFont
      */
     openStFont: function () {
         link.launchLinkServiceWithDictionary([{
@@ -887,7 +880,7 @@ var linkapi = {
 
     /**
      * 打开设备管理页面
-     * @method openStDevice
+     * @method linkapi.openStDevice
      */
     openStDevice: function () {
         link.launchLinkServiceWithDictionary([{
@@ -898,7 +891,7 @@ var linkapi = {
 
     /**
      * 打开手工同步页面
-     * @method openStSync
+     * @method linkapi.openStSync
      */
     openStSync: function () {
         link.launchLinkServiceWithDictionary([{
@@ -909,7 +902,7 @@ var linkapi = {
 
     /**
      * 打开清除缓存页面
-     * @method openStCleanCache
+     * @method linkapi.openStCleanCache
      */
     openStCleanCache: function () {
         link.launchLinkServiceWithDictionary([{
@@ -920,7 +913,7 @@ var linkapi = {
 
     /**
      * 打开修改密码页面
-     * @method openStModifyPassword
+     * @method linkapi.openStModifyPassword
      */
     openStModifyPassword: function () {
         link.launchLinkServiceWithDictionary([{
@@ -931,7 +924,7 @@ var linkapi = {
 
     /**
      * 打开邀请好友页面
-     * @method openStInvite
+     * @method linkapi.openStInvite
      */
     openStInvite: function () {
         link.launchLinkServiceWithDictionary([{
@@ -942,7 +935,7 @@ var linkapi = {
 
     /**
      * 打开二维码页面
-     * @method openStQrcode
+     * @method linkapi.openStQrcode
      */
     openStQrcode: function () {
         link.launchLinkServiceWithDictionary([{
@@ -953,7 +946,7 @@ var linkapi = {
 
     /**
      * 打开注销页面
-     * @method logout
+     * @method linkapi.logout
      */
     logout: function () {
         link.launchLinkServiceWithDictionary([{
@@ -962,9 +955,9 @@ var linkapi = {
         }], null, null);
     },
 
-    /**
-     * @class 流程
-     */
+    // /**
+    //  * @class 流程
+    //  */
 
     /**
      * 打开自由流程页面
@@ -981,7 +974,7 @@ var linkapi = {
 
     /**
      * 打开我的工作页面
-     * @method openProcessMywork
+     * @method linkapi.openProcessMywork
      */
     openProcessMywork: function () {
         link.launchLinkServiceWithDictionary([{
@@ -990,20 +983,41 @@ var linkapi = {
         }], null, null);
     },
 
-    //日程，调用系统的日程接口
+
+    /**
+     * 日程，调用系统的日程接口
+     * @method linkapi.insertOrUpdateSchedule
+     * @param scheduleinfo {object}
+     */
     insertOrUpdateSchedule: function (scheduleinfo, callback) {
         schedule.insertOrUpdate(scheduleinfo, callback);
     },
+    /**
+     * 删除某条日程记录
+     * @method linkapi.deleteSchedule
+     */
     deleteSchedule: function (scheduleinfo, callback) {
         schedule.deleteSchedule(scheduleinfo, callback);
     },
+    /**
+     * 查询某条日程记录
+     * @method linkapi.querySchedule
+     */
     querySchedule: function (scheduleinfo, callback) {
         schedule.querySchedule(scheduleinfo, callback);
     },
 
     /**
+     * 全部日程记录
+     * @method linkapi.querySchedule
+     */
+    queryAllSchedule: function (successCallback, failCallback) {
+        schedule.queryAllSchedule(successCallback,failCallback);
+    },
+
+    /**
      * 分享内容到Link
-     * @method share
+     * @method linkapi.share
      * @param params {object} 分享参数
      * @param params.title {string} 标题
      * @param params.content {string} 分享内容摘要
@@ -1014,6 +1028,21 @@ var linkapi = {
      * @param params.file {string} 存储服务的文件id
      * @param params.picture {string} 图片http地址
      * @param params.action {string} 执行指令
+     *
+     * @example
+     * 分享网页
+     * {
+     *    title:"标题",
+     *    type:"WEBSITE",
+     *    content:"http://domain/path",
+     * }
+     *
+     * 分享打开应用
+     * {
+     *    title:"标题",
+     *    type:"ACTION",
+     *    content:"[OpenApp]\nappCode=xxxx\nappUrl=xxxx"
+     * }
      */
     share: function (params, success, error) {
         if (params.type == "picture") params.icon = params.content;
@@ -1026,7 +1055,7 @@ var linkapi = {
 
     /**
      * 内容分享到聊天（个人/群组)
-     * @method shareToMessage
+     * @method linkapi.shareToMessage
      * @param params {object} 分享参数
      * @param success {function} 分享成功后回调
      * @param error {function}  分享失败后回调
@@ -1042,7 +1071,7 @@ var linkapi = {
 
     /**
      * 内容分享到动态
-     * @method shareToBlog
+     * @method linkapi.shareToBlog
      * @param params {object} 分享参数
      * @param success {function} 分享成功后回调
      * @param error {function}  分享失败后回调
@@ -1056,13 +1085,13 @@ var linkapi = {
         link.shareToBlog([params], success, error);
     },
 
-    /**
-     * @class 云盘
-     */
+    // /**
+    //  * @class 云盘
+    //  */
 
     /**
      * 打开云盘选择文件(单选)
-     * @method chooseDiskFile
+     * @method linkapi.chooseDiskFile
      * @param success {function} 成功选择文件回调,返回 id、name、size
      * @param error {function} 失败回调
      */
@@ -1073,8 +1102,9 @@ var linkapi = {
     /**
      * 创建云盘分享
      * @param id {string} 云盘文件id
-     * @return result {Object} 公开分享
+     * @param success {function} 成功回调，返回{Object} 公开分享
      具体参数：shareId、shareName、baseUrl、password、shareHref
+     * @param error {function} 失败回调
      */
     createDiskFileShare: function (id, success, error) {
         link.createDiskFileShare([id], success, error)
@@ -1082,7 +1112,8 @@ var linkapi = {
 
     /**
      * 查看云盘文件详情
-     * @param diskShareInfo {Object} 云盘文件分享信息
+     * @param diskFileId {string} 云盘文件id
+     * @param diskShare {Object} 云盘文件分享信息
      */
     openDiskFileDetail: function (diskFileId, shareInfo, success, error) {
         link.openDiskFileDetail([diskFileId, shareInfo], success, error);
@@ -1099,14 +1130,14 @@ var linkapi = {
         }], null, null);
     },
 
-    /**
-     * @class 网络请求
-     */
+    // /**
+    //  * @class 网络请求
+    //  */
 
     /**
      * 发送请求
-     * @method fetch
-     * @param method {string} 请求方式，支持 GET,POST,DELETE,PUT
+     * @method linkapi.fetch
+     * @param method linkapi.{string} 请求方式，支持 GET,POST,DELETE,PUT
      * @param params {object} 请求参数
      * @param params.url {string} 请求的URL
      * @param params.headers {object} 请求头
@@ -1136,7 +1167,7 @@ var linkapi = {
 
     /**
      * 发送GET请求
-     * @method get
+     * @method linkapi.get
      * @param params {object} 请求参数
      * @param params.url {string} 请求的URL
      * @param params.headers {object} 请求头
@@ -1150,7 +1181,7 @@ var linkapi = {
 
     /**
      * 发送POST请求
-     * @method post
+     * @method linkapi.post
      * @param params {object} 请求参数
      * @param params.url {string} 请求的URL
      * @param params.headers {object} 请求头, Content-Type默认值是 application/x-www-form-urlencoded
@@ -1164,7 +1195,7 @@ var linkapi = {
 
     /**
      * 发送DELETE请求
-     * @method delete
+     * @method linkapi.delete
      * @param params {object} 请求参数
      * @param params.url {string} 请求的URL
      * @param params.headers {object} 请求头
@@ -1178,7 +1209,7 @@ var linkapi = {
 
     /**
      * 发送PUT请求
-     * @method put
+     * @method linkapi.put
      * @param params {object} 请求参数
      * @param params.url {string} 请求的URL
      * @param params.headers {object} 请求头, Content-Type默认值是 application/x-www-form-urlencoded
@@ -1190,8 +1221,14 @@ var linkapi = {
         return this.fetch("PUT",params);
     },
 
+    // /**
+    //  * @class 其他
+    //  */
+
     /**
-     * @class 其他
+     * 更新消息的角标
+     * @method linkapi.updateTabBadge
+     * @param badgeValue {number}
      */
     updateTabBadge: function (badgeValue) {
         link.updateTabBadge([badgeValue], null, null);
@@ -1199,7 +1236,7 @@ var linkapi = {
 
     /**
      * 获取当前Link的主题颜色值
-     * @method getThemeColor
+     * @method linkapi.getThemeColor
      * @param success {function} 成功回调，返回颜色值
      */
     getThemeColor: function (success) {
@@ -1212,7 +1249,7 @@ var linkapi = {
 
     /**
      * 打开录制小视频
-     * @method openVideoRecord
+     * @method linkapi.openVideoRecord
      */
     openVideoRecord: function () {
         link.launchLinkServiceWithDictionary([{
@@ -1223,7 +1260,7 @@ var linkapi = {
 
     /**
      * 打开二维码扫码(自动解析指令，自动跳转)
-     * @method scanCode
+     * @method linkapi.scanCode
      */
     scanCode: function () {
         link.launchLinkServiceWithDictionary([{
@@ -1245,7 +1282,7 @@ var linkapi = {
 
     /**
      * 打开Link内置浏览器
-     * @method openLinkBroswer
+     * @method linkapi.openLinkBroswer
      * @param title {string} 标题栏文本
      * @param url {string} 打开的url
      */
@@ -1259,7 +1296,7 @@ var linkapi = {
 
     /**
      * 打开BT容器，传入url
-     * @method openBtBroswer
+     * @method linkapi.openBtBroswer
      * @param url {string} 打开的url
      */
     openBtBroswer: function (url) {
@@ -1269,7 +1306,7 @@ var linkapi = {
 
     /**
      * 打开pdf文件：url支持本地以及远程的地址
-     * @method openPdfBroswer
+     * @method linkapi.openPdfBroswer
      * @param title {string} 标题栏文本
      * @param url {string} 打开的url
      */
@@ -1289,7 +1326,7 @@ var linkapi = {
 
     /**
      * 选择文件
-     * @method chooseFile
+     * @method linkapi.chooseFile
      * @param callback {function} 选择文件成功回调
      */
     chooseFile: function (callback) {
@@ -1298,7 +1335,7 @@ var linkapi = {
 
     /**
      * 获取当前语言环境
-     * @method getLanguage
+     * @method linkapi.getLanguage
      * @param callback {function} 获取语言环境回调
      */
     getLanguage: function (callback) {
@@ -1307,7 +1344,7 @@ var linkapi = {
 
     /**
      * 发起选择文件资源
-     * @method selectFiles
+     * @method linkapi.selectFiles
      * @param type {number} 范围0~3，0：拍照 1：选择图片  2 本地文件  3：云盘文件
      * @param success {function} 成功回调函数
      * @param error {function} 失败回调函数
@@ -1321,7 +1358,7 @@ var linkapi = {
 
     /**
      * 发起资源上传
-     * @method uploadFiles
+     * @method linkapi.uploadFiles
      * @param resArray {array} 从selectFiles获取到的对象
      * @param success {function} 成功回调函数
      * @param error {function} 失败回调函数
@@ -1336,8 +1373,8 @@ var linkapi = {
 
     /**
      * 打开/浏览上传后的资源
-     * @method openFile
-     * @param res {object} 资源对象
+     * @method linkapi.openFile
+     * @param res {object} 资源对象，从selectFiles获取到的对象
      */
     openFile:function(res){
         try{
@@ -1350,7 +1387,7 @@ var linkapi = {
 
     /**
      * 注册广播接收器。注册后可以通过key监听全局消息
-     * @method registerReceiver
+     * @method linkapi.registerReceiver
      * @param type {number} 聊天类型 私聊=1 群组=2 部门=4 服务号=5
      * @param key {string} 广播接收器的code，可以传入服务号的code,type=5时, 为服务号的code,否则为talkWithId
      */
@@ -1363,7 +1400,7 @@ var linkapi = {
 
     /**
      * 更新消息界面tab的角标
-     * @method updateMessageTabBadge
+     * @method linkapi.updateMessageTabBadge
      * @param params {object} 参数
      * @param params.appCode {string} 编码,如业务大厅编码businesscenter
      * @param params.unReadCount {number}  消息数量
@@ -1376,11 +1413,11 @@ var linkapi = {
         }
     },
 
-    /**
-     * 发送退出应用事件
-     * @method sendExitEvent
-     * @param code {string} 应用appcode
-     */
+    // *
+    //  * 发送退出应用事件
+    //  * @method linkapi.sendExitEvent
+    //  * @param code {string} 应用appcode
+
     sendExitEvent:function(code){
         try{
             link.sendExitEvent([code]);
@@ -1391,7 +1428,7 @@ var linkapi = {
 
     /**
      * 取消指定聊天对象的通知栏信息
-     * @method cancelMsgNtf
+     * @method linkapi.cancelMsgNtf
      * @param id {string}  可以是私聊、群组、服务号等聊天对象Id
      */
     cancelMsgNtf:function (id) {
@@ -1404,7 +1441,7 @@ var linkapi = {
 
     /**
      * 根据类型清除通知栏的通知
-     * @method cancelMsgNtfByCategoryId
+     * @method linkapi.cancelMsgNtfByCategoryId
      * @param categoryId
      */
     cancelMsgNtfByCategoryId:function (categoryId) {
@@ -1417,6 +1454,7 @@ var linkapi = {
 
     /**
      * 设置聊天界面右上角的气泡未读数
+     * @method linkapi.setChatActionTip
      * @param id {string} 可以是私聊、群组、服务号等聊天对象Id
      * @param tip {string} 未读数或者文本
      */
@@ -1430,6 +1468,7 @@ var linkapi = {
 
     /**
      * 发送消息通用方法
+     * @method linkapi.sendMessage
      * @param msgObj {object}
      * @param msgObj.toCompany {string} 对应企业code
      * @param msgObj.toId {string} 指定对象id
@@ -1448,6 +1487,7 @@ var linkapi = {
 
     /**
      * 读取文件文本内容
+     * @method linkapi.readTextFromFile
      * @param filePath {string} 文件路径，远程或者本地
      * @param charset {string} 编码方式 utf-8 或者 gb2312
      * @param success {function} 成功回调函数，返回文本内容
@@ -1477,6 +1517,7 @@ var linkapi = {
 
     /**
      * 打开搜索界面
+     * @method linkapi.startSearch
      * @param keyword {string} 关键字
      */
     startSearch:function (keyword) {
@@ -1486,8 +1527,10 @@ var linkapi = {
 
         }
     },
+
     /**
      * 打开语音助手
+     * @method linkapi.openSpeechAssistant
      */
     speechAssistant: function () {
         link.launchLinkServiceWithDictionary([{
@@ -1495,19 +1538,53 @@ var linkapi = {
             key: "SpeechAssistant"
         }], null, null);
     },
+
+    /**
+     * 获取Link登录的cookie信息
+     * @method linkapi.getLoginCookies
+     * @param success {function} 成功回调函数
+     * @param error {function} 失败回调函数，返回错误信息
+     */
+    getLoginCookies: function (success,error) {
+        link.getLoginCookies([],success,error)
+    },
+
+    /**
+     * 获取需要授权认证的url
+     * @method linkapi.getDomainRequireAuthUrls
+     * @param success {function} 成功回调函数
+     * @param error {function} 失败回调函数，返回错误信息
+     */
+    getDomainRequireAuthUrls: function (success,error) {
+        link.getDomainRequireAuthUrls([],success,error);
+    },
+
+    /**
+     * 获取link图片物理地址,根据内部定的协议获取真实的物理地址
+     * @method linkapi.getImage
+     * @param image {string} 图片标识例如 dist://xxx.png, store://xxx.png ,  iconxxx.png
+     * @param success 返回图片路径
+     * @param error 错误信息
+     */
+    getImage: function (image, success, error) {
+        link.getImage([image],success,error);
+    },
+
     /**
      * 发起聊天
-     * @method startChat
+     * @method linkapi.startChat
      */
     startChat: function () {
         link.launchLinkServiceWithDictionary([{
             code: "StartChat"//固定参数
         }], null, null);
     },
+
     /**
      * 打开待办待阅
-     * @method unityTodo
-     * @params defaultIndex 0(待办)/1（待阅）/2（已办）
+     * @method linkapi.unityTodo
+     * @params params {object}
+     * @param params.defaultIndex 0(待办)/1（待阅）/2（已办）
      */
     openTodo: function (params) {
         link.launchLinkServiceWithDictionary([{
@@ -1515,19 +1592,10 @@ var linkapi = {
             defaultIndex : params.defaultIndex
         }], null, null);
     },
-    /**
-     * 发起语音
-     * @method speechAssistant
-     */
-    speechAssistant: function () {
-        link.launchLinkServiceWithDictionary([{
-            code: "OpenBuiltIn",//固定参数
-            key : "SpeechAssistant"
-        }], null, null);
-    },
+
     /**
      * 打开邮箱
-     * @method startEmail
+     * @method linkapi.startEmail
      */
     startEmail: function () {
         link.launchLinkServiceWithDictionary([{
@@ -1535,9 +1603,10 @@ var linkapi = {
             key : "StartEmail"
         }], null, null);
     },
+
     /**
      * 获取未读邮箱条数
-     * @method startEmail
+     * @method linkapi.startEmail
      * @param success {function} 成功回调函数，返回文本内容
      * @param error {function} 失败回调函数，返回错误信息
      */
@@ -1548,64 +1617,17 @@ var linkapi = {
 
         }
     },
-    /**
-     * 获取Link登录的cookie信息
-     */
-    getLoginCookies: function (success,error) {
-        link.getLoginCookies([],success,error)
-    },
 
-    /**
-     * 获取需要授权认证的url
-     */
-    getDomainRequireAuthUrls: function (success,error) {
-        link.getDomainRequireAuthUrls([],success,error);
-    },
-
-    /**
-     * 获取link图片物理地址,根据内部定的协议获取真实的物理地址
-     * @param image 图片标识例如 dist://xxx.png, store://xxx.png ,  iconxxx.png
-     * @param success 返回图片路径
-     * @param error 错误信息
-     */
-    getImage: function (image, success, error) {
-        link.getImage([image],success,error);
-    },
-    /**
-     * 打开我的页面
-     * @method openMe
-     */
-    openMe: function () {
-        link.launchLinkServiceWithDictionary([{
-            code: "OpenBuiltIn",
-            key: "MySelf",
-        }], null, null);
-    },
     /**
      * 打开在线客服
-     * @method openOnlineServicer
+     * @method linkapi.openOnlineServicer
      */
     openOnlineServicer: function () {
         link.launchLinkServiceWithDictionary([{
             code: "OpenBuiltIn",
             key : "OnlineServicer"
         }], null, null);
-    },
-     /**
-     * 执行指令的接口
-     * @method launchLinkService
-     */
-    launchLinkService : function (params, success, error) {
-        link.launchLinkService([params], success, error);
-    },
-
-
-
-    
-
-
-
-
+    }
 }
 
 module.exports = linkapi;
