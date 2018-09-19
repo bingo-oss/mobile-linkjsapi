@@ -14,8 +14,14 @@ let ajax = {
                     url += "?";
                 }
                 if (typeof data == "object") {
-                    for (let key in data) {
-                        url += `&${key}=${encodeURIComponent(data[key])}`;
+                    let dLength = Object.keys(data).length;
+                    for (let i = 0; i < dLength; i++) {
+                        let key = Object.keys(data)[i];
+                        let value = encodeURIComponent(data[key]);
+                        url += `${key}=${value}`;
+                        if (i != dLength - 1) {
+                            url += "&";
+                        }
                     }
                 }
             }
