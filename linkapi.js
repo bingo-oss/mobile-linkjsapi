@@ -129,7 +129,7 @@ var linkapi = {
 
     /**
      * 创建群组
-     * @method createGroup
+     * @method linkapi.createGroup
      * @param  {Object} params 包含字段userIds, groupName
      * @param  {function} success 成功回调函数,返回创建成功的群组信息
      * @param  {function} error   失败回调函数,返回失败原因
