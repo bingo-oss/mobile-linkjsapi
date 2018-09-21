@@ -43,7 +43,9 @@
             },
             createGroup(){
                 this.linkapi.getUserInfoByCellphoneOrEmail('17900000016', (res)=>{
-                    this.linkapi.createGroup(res.userId, (res)=>{
+                    this.linkapi.createGroup({
+                        userIds: res.userId
+                    }, (res)=>{
                         this.$alert(res);
                     }, (error)=>{
                         this.$alert(error);

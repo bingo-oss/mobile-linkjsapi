@@ -130,15 +130,12 @@ var linkapi = {
     /**
      * 创建群组
      * @method createGroup
-     * @param  {array} userIds 需要加入群组的用户userId, 传入数组
-     * @param  {number} pickUsers, 0/1 默认为1，是否选人
-     * @param  {number} isPublic, 0/1 默认为0，是否公开
-     * @param  {String} groupName, 群名称
+     * @param  {Object} params 包含字段userIds, groupName
      * @param  {function} success 成功回调函数,返回创建成功的群组信息
      * @param  {function} error   失败回调函数,返回失败原因
      * @return {object} 包含字段: groupId,name,ownerId,type,isPublic等
      */
-    createGroup: function (userIds, pickUsers, isPublic, groupName, success, error) {
+    createGroup: function (params, success, error) {
         var successCallback = function (resp) {
             if (typeof resp == "string") {
                 resp = JSON.parse(resp);
@@ -150,10 +147,10 @@ var linkapi = {
         link.launchLinkServiceWithDictionary([{
             code: "OpenBuiltIn",
             key: "CreateGroup",
-            userSelected: userIds || [],
-            isPublic: isPublic,
-            groupName: groupName,
-            pickUsers: pickUsers
+            userSelected: params.userIds || [],
+            isPublic: params.isPublic
+            // groupName: params.groupName,
+            // pickUsers: params.pickUsers
         }], successCallback, error);
     },
 
