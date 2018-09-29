@@ -1640,9 +1640,9 @@ var linkapi = {
      */
     getServeConfigs: function (success, error) {
         try{
-            link.getServeConfigs(success)
+            link.getServeConfigs(success, error);
         }catch(e){
-            error
+            
         }
     }
 
