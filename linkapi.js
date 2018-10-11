@@ -1640,12 +1640,11 @@ var linkapi = {
      */
     getServeConfigs: function (success, error) {
         try{
-            link.getServeConfigs(success, error);
+            link.getServeConfigs([],success, error);
         }catch(e){
             
         }
     }
-
 
 }
 
