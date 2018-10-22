@@ -1636,11 +1636,11 @@ var linkapi = {
      * 获取配置的服务器地址
      * @param success {function} 成功回调函数，返回json对象
      * @param error {function} 失败回调函数，返回错误信息
-     * @method linkapi.getServeConfigs
+     * @method linkapi.getServerConfigs
      */
-    getServeConfigs: function (success, error) {
+    getServerConfigs: function (success, error) {
         try{
-            link.getServeConfigs([],success, error);
+            link.getServerConfigs([],success, error);
         }catch(e){
             
         }
