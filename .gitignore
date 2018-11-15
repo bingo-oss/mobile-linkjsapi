@@ -1,11 +1,5 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-
 **/package-lock.json
 *.DS_Store
 
-**/node_modules
-**/.idea
-**/dist
+/node_modules
+/.idea
