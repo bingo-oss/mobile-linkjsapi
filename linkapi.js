@@ -1,6 +1,11 @@
 var link = weex.requireModule("LinkModule");
 var schedule = weex.requireModule("ScheduleModule");
 var platform = weex.config.env.platform;
+var camera = weex.requireModule("CameraModule");
+var sqlite = weex.requireModule("SQLiteModule");
+var file = weex.requireModule("FileModule");
+var fileTransfer = weex.requireModule("FileTransferModule");
+var app = weex.requireModule("AppModule");
 var ajax = require("./ajax.js");
 
 var extend = function (obj, ext) {
@@ -401,7 +406,8 @@ var linkapi = {
      */
     startContactSingleSelector: function (title, dataType, extraParams, success, error) {
         extraParams = extend({
-            isIncludeDisableUser: false
+            isIncludeDisableUser: false,
+            hasLatelyChatConversation: true
         }, extraParams);
         link.startContactSingleSelector([title, dataType, extraParams], success, error);
     },
@@ -1566,8 +1572,8 @@ var linkapi = {
      * 获取link图片物理地址,根据内部定的协议获取真实的物理地址
      * @method linkapi.getImage
      * @param image {string} 图片标识例如 dist://xxx.png, store://xxx.png ,  iconxxx.png
-     * @param success 返回图片路径
-     * @param error 错误信息
+     * @param {function} success 返回图片路径
+     * @param {function} error 错误信息
      */
     getImage: function (image, success, error) {
         link.getImage([image],success,error);
@@ -1644,8 +1650,639 @@ var linkapi = {
         }catch(e){
             
         }
+    },
+
+    /**
+     * 关闭 keyboard
+     * @method linkapi.hideKeyboard
+     */
+    hideKeyboard: function () {
+        try{
+            app.hideKeyboard([]);
+        }catch(e){
+
+        }
+    },
+
+
+    /**
+     * 获取 IMEI(android)
+     * @method linkapi.getIMEI
+     * @param success {function} 成功回调函数
+     */
+    getIMEI: function (success) {
+        try{
+            app.getIMEI([], success);
+        }catch(e){
+
+        }
+    },
+
+
+    /**
+     * 拨打电话
+     * @method linkapi.call
+     * @param {string} phoneNum 电话号码
+     */
+    call: function (phoneNum) {
+        app.call([phoneNum], null, null);
+    },
+
+    /**
+     * 显示加载中
+     * @method linkapi.showLoading
+     * @param {object} params
+     * @param {string} params.title 标题文本
+     */
+    showLoading: function (params) {
+        app.showLoading([params], null, null);
+    },
+
+    /**
+     * 隐藏加载中
+     * @method linkapi.hideLoading
+     */
+    hideLoading: function () {
+        try{
+            app.hideLoading([], null, null);
+        }catch(e){
+
+        }
+    },
+
+    /**
+     * 显示成功提示
+     * @method linkapi.showSuccess
+     * @param {object} params
+     * @param {string} params.title 标题文本
+     */
+    showSuccess: function (params) {
+        app.showSuccess([params], null, null);
+    },
+
+    /**
+     * 显示错误提示
+     * @method linkapi.showError
+     * @param {object} params
+     * @param {string} params.title 标题文本
+     */
+    showError: function (params) {
+        app.showError([params], null, null);
+    },
+
+
+    /**
+     * @callback cameraCallback
+     * @param {Object} info 返回的结果对象
+     * @param {string} [info.status] "success"表示操作成功, "fail"表示失败, "cancel"表示用户取消操作
+     * @param {number} [info.code] 100: 成功, 101:摄像头不可用, 102:摄像头无权限, 103:图片保存失败, 400: 参数错误
+     * @param {string} [info.message] 相应的文字描述信息
+     * @param {Array} [info.filePaths] 图片路径数组
+     */
+
+    /**
+     * 拍照
+     * @method linkapi.captureImage
+     * @param {object} [params] - 配置
+     * @param {string} [params.cameraDirection = 'back'] - "front"使用前置摄像头，"back"使用后置摄像头。默认后置。
+     * @param {boolean} [params.saveToPhotoAlbum = true] - 是否保存到系统相册，默认 true。
+     * @param {number} [params.quality=100] - 可选 1 - 100。尺寸不变，清晰度改变。数值越大越清晰，100 为原始清晰度。 TODO: 更详细文档
+     * @param  {number} [params.targetWidth] - 图片输出实际宽度
+     * @param  {number} [params.targetHeight] - 图片输出实际高度
+     * @param  {boolean} [params.isCrop=true] - 是否裁剪，默认 true。cropWidth 和 cropHeight 只有在 isCrop 为 true 时生效。如果 cropWidth 与 cropHeight 只传一个，另外一个默认与这个相同。
+     * @param  {number} [params.cropWidth] - 裁剪框宽度，默认屏幕宽度。
+     * @param  {number} [params.cropHeight] - 裁剪框高度，默认与宽度一致。
+     * @param {cameraCallback} [callback] - 回调函数
+     */
+    captureImage: function (params, callback) {
+        try{
+            camera.captureImage([params], callback);
+        }catch(e){
+
+        }
+    },
+
+    /**
+     * 选择图片
+     * @method linkapi.selectImage
+     * @param  {Object} [params] - 配置
+     * @param  {number} [params.maxSelect=1] - 最多选择的图片张数。参数 isCrop, cropWidth, cropHeight 只有在 maxSelect = 1 时有效。
+     * @param  {number} [params.quality=100] - 质量，尺寸不变，清晰度改变。
+     * @param  {boolean} [params.isCrop=true] - 是否裁剪，默认 true。cropWidth 和 cropHeight 只有在 isCrop 为 true 时生效。如果 cropWidth 与 cropHeight 只传一个，默认另外一个与这个相同。
+     * @param  {number} [params.cropWidth] - 裁剪框宽度，默认屏幕宽度。
+     * @param  {number} [params.cropHeight] - 裁剪框高度，默认与宽度一致。
+     * @param {cameraCallback} [callback] - 回调函数
+     */
+    selectImage: function (params, callback) {
+        try{
+            camera.selectImage([params], callback);
+        }catch(e){
+
+        }
+    },
+
+    /**
+     * 裁剪图片
+     * @method linkapi.cropImage
+     * @param  {Object} [params] - 配置
+     * @param  {string} [params.sourcePath] - 源文件
+     * @param  {boolean} [params.savePath] - 保存路径
+     * @param  {number} [params.quality=100] - 质量，尺寸不变，清晰度改变。
+     * @param  {number} [params.cropWidth] - 裁剪框宽度，默认屏幕宽度。
+     * @param  {number} [params.cropHeight] - 裁剪框高度，默认与宽度一致。
+     * @param {cameraCallback} [callback] - 回调函数
+     */
+    cropImage: function (params, callback) {
+        try{
+            camera.cropImage([params], callback);
+        }catch(e){
+
+        }
+    },
+
+    /**
+     * 压缩图片
+     * @method linkapi.compressImage
+     * @param  {Object} [params] - 配置
+     * @param  {string} [params.sourcePath] - 源文件
+     * @param  {boolean} [params.savePath] - 保存路径
+     * @param  {number} [params.targetWidth] - 图片输出实际宽度
+     * @param  {number} [params.targetHeight] - 图片输出实际高度
+     * @param  {number} [params.quality=100] - 质量，尺寸不变，清晰度改变。
+     * @param {cameraCallback} [callback] - 回调函数
+     */
+    compressImage: function (params, callback) {
+        try{
+            camera.compressImage([params], callback);
+        }catch(e){
+
+        }
+    },
+
+    /**
+     * 图片转成base64
+     * @method linkapi.imgToBase64
+     * @param  {object} params  配置
+     * @param  {string} params.imgPath 图片路径
+     * @param  {string} params.quality 质量，默认50
+     * @param  {function} success 成功回调，返回转换后的base64字符串
+     * @param  {function} error    失败回调，返回错误信息
+     */
+    imgToBase64: function (params, success, error) {
+        try{
+            camera.imgToBase64([params], success, error);
+        }catch(e){
+
+        }
+    },
+
+
+    /**
+     * 错误回调函数
+     * @callback errorCallback
+     * @param {string} error 错误信息
+     */
+
+    /**
+     * 打开文件,office,pdf等，使用系统中能打开的软件打开该文件
+     * @method linkapi.fileOpenFile
+     * @param {String} uri - 文件的 uri
+     * @param {Object} [params] - 打开文件参数
+     * @param {bool} [params.showChooser=false] - 是否显示应用选择器，默认为 false
+     * @param {string} [params.chooserTitle] - 当 option.showChooser 为 true 且平台为 Android 时有效，设置选择器的标题
+     * @param {Function} [success] - 成功回调函数 ,无返回结果
+     * @param {errorCallback} [error] - 失败回调函数，返回错误原因
+     */
+    fileOpenFile: function (uri, params, success, error) {
+        try{
+            file.openFile([uri, params], success, error);
+        }catch(e){
+
+        }
+    },
+
+    /**
+     * 选择文件回调函数
+     * @callback selectFileCallback
+     * @param {string} path 选中文件的路径
+     */
+
+    /**
+     * 打开文件选择器。Android 上打开文件管理器，可以选择各种类型的文件，iOS 上打开 Photos 应用，只能选择图片或视频。
+     * @method linkapi.selectFile
+     * @param {selectFileCallback} [success] - 成功回调函数，如果用户取消操作，则返回参数为空字符串
+     * @param {errorCallback} [error] - 失败回调函数，返回错误原因，例如无权限
+     */
+    selectFile: function (success, error) {
+        try{
+            file.selectFile([], success, error);
+        }catch(e){
+
+        }
+    },
+
+    /**
+     * 文件是否存在
+     * @method linkapi.exist
+     * @param {String} [file] - 文件本地路径
+     * @param {function} [callback] - 成功回调函数，返回true/false
+     */
+    exist: function (file, callback) {
+        try{
+            file.exist([file], callback);
+        }catch(e){
+
+        }
+    },
+
+    /**
+     * 获取应用能够读写的目录
+     * @method linkapi.getAppDirectroy
+     * @param {function} [callback] - 回调函数，返回应用能够读写的目录
+     */
+    getAppDirectroy: function (callback) {
+        try{
+            file.getAppDirectroy([], callback);
+        }catch(e){
+
+        }
+    },
+
+    /**
+     * @callback progressCallback
+     * @param {Object} progressInfo - 进度信息对象
+     * @param {number} progressInfo.current - 当前进度（in byte）
+     * @param {number} progressInfo.total - 总共数据（in byte）
+     */
+
+    /**
+     * @callback successCallback
+     * @param {Object} successInfo
+     * @param {Object} successInfo.headers - HTTP response header
+     * @param {number} successInfo.code - HTTP 状态码
+     * @param {string} successInfo.path - 文件保存路径 (only for download)
+     * @param {string} successInfo.response - HTTP response body (only for upload)
+     */
+
+    /**
+     * @callback errorCallback
+     * @param {Object} errorInfo
+     * @param {string} errorInfo.error - 错误信息
+     * @param {Object} [errorInfo.headers] - HTTP response header
+     * @param {number} [errorInfo.code] - HTTP 状态码
+     * @param {string} [errorInfo.response] - HTTP response body
+     */
+
+    /**
+     * 下载文件到指定位置
+     * @method linkapi.download
+     * @param {String} url - 要下载的文件 url
+     * @param {Object} [params] - 配置参数
+     * @param {Object} [params.saveDir] - 保存的目录，默认保存到应用目录下
+     * @param {Object} [params.filename] - 保存的文件名，默认使用系统建议的文件名
+     * @param {Object} [params.headers] - HTTP request header
+     * @param {string} [params.method="GET"] - HTTP method
+     * @param {progressCallback} [progress] - 过程回调函数
+     * @param {successCallback} [success] - 成功回调函数
+     * @param {errorCallback} [error] - 失败回调函数
+     */
+    download: function (url, params, progress, success, error) {
+        fileTransfer.download([url, params], progress, success, error);
+    },
+
+    /**
+     * 暂停下载
+     * @method linkapi.pauseDownload
+     * @param  {string} url 下载中的 url
+     */
+    pauseDownload: function (url) {
+        fileTransfer.pauseDownload([url], null, null);
+    },
+
+    /**
+     * 恢复下载
+     * @method linkapi.resumeDownload
+     * @param  {string} url 下载中的 url
+     */
+    resumeDownload: function (url) {
+        fileTransfer.resumeDownload([url], null, null);
+    },
+
+    /**
+     * 取消下载
+     * @method linkapi.cancelDownload
+     * @param  {string} url 下载中的 url
+     */
+    cancelDownload: function (url) {
+        fileTransfer.cancelDownload([url], null, null);
+    },
+
+    /**
+     * 上传文件到指定服务器
+     * @method linkapi.upload
+     * @param {string} [file] - 本地文件路径
+     * @param {string} [serverUrl] - 服务器 url
+     * @param {Object} [options] - 配置参数
+     * @param {string} [options.name] - form data multi-part 对应的 name 属性，注意不是 filename 属性
+     * @param {Object} [options.headers] - HTTP request header
+     * @param {string} [options.method] - HTTP method
+     * @param {progressCallback} [progress] - 过程回调函数
+     * @param {successCallback} [success] - 成功回调函数
+     * @param {errorCallback} [error] - 失败回调函数
+     */
+    upload: function (file, serverUrl, params, progress, success, error) {
+        fileTransfer.upload([file, serverUrl, params], progress, success, error);
+    },
+
+    /**
+     * 取消上传
+     * @method linkapi.cancelUpload
+     * @param  {string} serverUrl 上传中的 url
+     */
+    cancelUpload: function (serverUrl) {
+        fileTransfer.cancelUpload([serverUrl], null, null);
+    },
+
+    /**
+     * TODO: 目前底层需要一个唯一 id 作为任务标记，使得在下载或上传过程中有机会取消指定任务。
+     * 目前使用的 id 是任务的 url 地址，因此造成限制：同时间只能下载同一个 url 或者上传同一个 url。
+     * 如果将 id 改为别的，就不会有这个限制。
+     */
+
+
+    /**
+     * 打开数据库，在进行其他数据库操作之前调用
+     * @method linkapi.open
+     * @param {String} [dbName] - 数据库名称
+     * @param {function} [success] - 成功回调函数
+     * @param {function} [error] - 失败回调函数, errMsg 表示失败原因
+     * @example
+     * linkapi.open("test.db",
+     *     function(){console.log("open db success!"); },
+     *     function(errMsg){console.log("open db error: " + errMsg);}
+     * );
+     */
+    open: function (dbName, success, error) {
+        sqlite.open([dbName], success, error);
+    },
+
+    /**
+     * 关闭数据库
+     * @method linkapi.close
+     * @param {String} [dbName] - 数据库名称
+     * @param {function} [success] - 成功回调函数
+     * @param {function} [error] - 失败回调函数, errMsg 表示失败原因
+     * @example
+     * linkapi.close("test.db",
+     *     function(){console.log("close db success!"); },
+     *     function(errMsg){console.log("close db error: " + errMsg);}
+     * );
+     */
+    close: function (dbName, success, error) {
+        sqlite.close([dbName], success, error);
+    },
+
+    /**
+     * 使用SQL查询数据库记录
+     * @method linkapi.execQuery
+     * @param {String} [dbName] - 数据库名称
+     * @param {String} [sql] - 需要执行的查询SQL语句
+     * @param {function} [success] - 成功回调函数，dataList表示查询到数据列表
+     * @param {function} [error] - 失败回调函数, errMsg 表示失败原因
+     * @example
+     * linkapi.execQuery("test.db", "select * from Persons",
+     *     function(dataList){
+     *         if(dataList){
+     *             console.log("query " + dataList.length + " result:");
+     *             for(var i = 0; i < dataList.length; ++i){
+     *                 console.log("  " + i + ":" + JSON.stringify(dataList[i]))
+     *             }
+     *         }else{
+     *             console.log("query 0 result:");
+     *         }
+     *     },
+     *     function(errMsg){
+     *         console.log("query error: " + errMsg);
+     *     }
+     * );
+     */
+    execQuery: function (dbName, sql, success, error) {
+        sqlite.execQuery([dbName, sql], success, error);
+    },
+
+    /**
+     * 使用SQL添加/修改/删除数据库、记录（除了查询）
+     * @method linkapi.execSQL
+     * @param {String} [dbName] - 数据库名称
+     * @param {String} [sql] - 需要执行的SQL语句
+     * @param {function} [success] - 成功回调函数，无参数
+     * @param {function} [error] - 失败回调函数, errMsg 表示失败原因
+     * @example
+     * linkapi.execSQL("test.db", "CREATE TABLE Persons (LastName varchar(255), FirstName varchar(255), Age int, Address varchar(255), City varchar(255))",
+     *     function(){console.log("create table success!");},
+     *     function(errMsg){console.log("create table error: " + errMsg);}
+     * );
+     */
+    execSQL: function (dbName, sql, success, error) {
+        sqlite.execSQL([dbName, sql], success, error);
+    },
+
+    /**
+     * 查询数据
+     * @method linkapi.query
+     * @param {String} [dbName] - 数据库名称
+     * @param {String} [tableName] - 表名
+     * @param {Array} [columns] - 要查询的字段列表
+     * @param {String} [whereClause] - 查询条件， 如："Age=30"; 如果没有传入""
+     * @param {function} [success] - 成功回调函数，dataList表示查询到数据列表
+     * @param {function} [error] - 失败回调函数, errMsg 表示失败原因
+     * @example
+     * var columns = ['FirstName', 'LastName'];
+     * linkapi.query("test.db", "Persons", columns, "",
+     *     function(dataList){
+     *         if(dataList){
+     *             console.log("query " + dataList.length + " result:");
+     *             for(var i = 0; i < dataList.length; ++i){
+     *                 console.log("  " + i + ":" + JSON.stringify(dataList[i]))
+     *             }
+     *         }else{
+     *             console.log("query 0 result:");
+     *         }
+     *     },
+     *     function(errMsg){
+     *         console.log("query error: " + errMsg);
+     *     }
+     * );
+     */
+    query: function (dbName, tableName, columns, whereClause,  success, error) {
+        sqlite.query([dbName, tableName, columns, whereClause], success, error);
+    },
+
+    /**
+     * 插入一条数据
+     * @method linkapi.insert
+     * @param {String} [dbName] - 数据库名称
+     * @param {String} [tableName] - 表名
+     * @param {Object} [values] - 字段名对应值
+     * @param {function} [success] - 成功回调函数，返回rowId
+     * @param {function} [error] - 失败回调函数, errMsg 表示失败原因
+     * @example
+     * linkapi.insert("test.db", "Persons", {LastName:"c", FirstName:"sx", Age:30, Address:"test adress", City:"gz"},
+     *     function(rowId){
+     *         console.log("insert data sucess: " + rowId);
+     *     },
+     *     function(errMsg){
+     *         console.log("insert data error: " + errMsg);
+     *     }
+     * );
+     */
+    insert: function (dbName, tableName, values, success, error) {
+        sqlite.insert([dbName, tableName, values], success, error);
+    },
+
+    /**
+     * 根据条件更新表记录
+     * @method linkapi.update
+     * @param {String} [dbName] - 数据库名称
+     * @param {String} [tableName] - 表名
+     * @param {Object} [values] - 字段名对应值
+     * @param {String} [whereClause] - 指定更新条件， 如："Age=30"; 如果没有传入""
+     * @param {function} [success] - 成功回调函数，返回count成功更新的记录数
+     * @param {function} [error] - 失败回调函数, errMsg 表示失败原因
+     * @example
+     * linkapi.update("test.db", "Persons", {FirstName:'c', LastName:"sx"}, "Age=30",
+     *     function(count){
+     *         console.log("update data row count: " + count)
+     *     },
+     *     function(errMsg){
+     *         console.log("update error: " + errMsg);
+     *     }
+     * );
+     */
+    update: function (dbName, tableName, values, whereClause, success, error) {
+        sqlite.update([dbName, tableName, values, whereClause], success, error);
+    },
+
+    /**
+     * 根据条件删除记录
+     * @method linkapi.deleteSqlite
+     * @param {String} [dbName] - 数据库名称
+     * @param {String} [tableName] - 表名
+     * @param {String} [whereClause] - 指定更新条件， 如："Age=30"; 如果没有传入""
+     * @param {function} [success] - 成功回调函数，返回count成功删除的记录数
+     * @param {function} [error] - 失败回调函数, errMsg 表示失败原因
+     * @example
+     * linkapi.deleteSqlite("test.db", "Persons", "FirstName='shixin'",
+     *    function(count){
+     *        console.log("delete row count: " + count);
+     *    },
+     *    function(errMsg){
+     *        console.log("delete error: " + errMsg);
+     *    }
+     * );
+     */
+    deleteSqlite: function (dbName, tableName, whereClause, success, error) {
+        sqlite.delete([dbName, tableName, whereClause], success, error);
+    },
+
+    /**
+     * 在同一个事务中批量执行SQL
+     * @method linkapi.transaction
+     * @param {String} [dbName] - 数据库名称
+     * @param {List} [sqls] - SQL列表
+     * @param {function} [success] - 成功回调函数，无返回值
+     * @param {function} [error] - 失败回调函数, errMsg 表示失败原因
+     * @example
+     * var sqls = [];
+     * sqls[sqls.length++] = ("INSERT INTO Persons(LastName, FirstName, Age, City, Address) VALUES('sx', 'chen', 30, 'gz', 'test address')");
+     * sqls[sqls.length++] = ("INSERT INTO Persons(LastName, FirstName, Age, City, Address) VALUES('sx', 'chen', 30, 'gz', 'test address')");
+     * sqls[sqls.length++] = ("INSERT INTO Persons(LastName, FirstName, Age, City, Address) VALUES('sx', 'chen', 30, 'gz', 'test address')");
+     * sqls[sqls.length++] = ("INSERT INTO Persons(LastName, FirstName, Age, City, Address) VALUES('sx', 'chen', 30, 'gz', 'test address')");
+     * sqls[sqls.length++] = ("INSERT INTO Persons(LastName, FirstName, Age, City, Address) VALUES('sx', 'chen', 30, 'gz', 'test address')");
+     * sqls[sqls.length++] = ("INSERT INTO Persons(LastName, FirstName, Age, City, Address) VALUES('sx', 'chen', 30, 'gz', 'test address')");
+     * sqls[sqls.length++] = ("INSERT INTO Persons(LastName, FirstName, Age, City, Address) VALUES('sx', 'chen', 30, 'gz', 'test address')");
+     * sqls[sqls.length++] = ("INSERT INTO Persons(LastName, FirstName, Age, City, Address) VALUES('sx', 'chen', 30, 'gz', 'test address')");
+     * sqls[sqls.length++] = ("INSERT INTO Persons(LastName, FirstName, Age, City, Address) VALUES('sx', 'chen', 30, 'gz', 'test address')");
+     * sqls[sqls.length++] = ("INSERT INTO Persons(LastName, FirstName, Age, City, Address) VALUES('sx', 'chen', 30, 'gz', 'test address')");
+     * linkapi.transaction("test.db", sqls,
+     *     function(){
+     *         console.log("transaction success");
+     *     },
+     *     function(errMsg){
+     *         console.log("transaction error: " + errMsg);
+     *     }
+     * );
+     */
+    transaction: function (dbName, sql, success, error) {
+        sqlite.transaction([dbName, sql], success, error);
+    },
+
+    /**
+     * 删除表
+     * @method linkapi.dropTable
+     * @param {String} [dbName] - 数据库名称
+     * @param {String} [tableName] - 表名
+     * @param {function} [success] - 成功回调函数
+     * @param {function} [error] - 失败回调函数, errMsg 表示失败原因
+     * @example
+     * linkapi.execSQL("test.db", "drop table Persons",
+     *    function(){
+     *        console.log("drop table success!");
+     *    },
+     *    function(errMsg){
+     *        console.log("drop table error: " + errMsg);
+     *    }
+     * );
+     */
+    dropTable: function (dbName, tableName, success, error) {
+        sqlite.dropTable([dbName, tableName], success, error);
     }
 
+
 }
+
+/**
+ * @namespace globalEvent
+ */
+
+/**
+ * var globalEvent = weex.requireModule("globalEvent");
+ */
+
+
+/**
+ * 网络状态
+ * @event globalEvent.networkStatus
+ * @type {object}
+ * @property {string} [status] 三种网络状态，分别是 'offline','wifi','mobile'
+ * @example
+ * var globalEvent = weex.requireModule('globalEvent');
+ * globalEvent.addEventListener("networkStatus", function (e) {
+ *       console.log(e.status)
+ * });
+ */
+
+/**
+ * 键盘状态
+ * @event globalEvent.keyboardStatus
+ * @type {object}
+ * @property {string} [status] 分别是 'show' 和 'hide'
+ * @example
+ * var globalEvent = weex.requireModule('globalEvent');
+ * globalEvent.addEventListener("keyboardStatus", function (e) {
+ *       console.log(e.status)
+ * });
+ */
+
+/**
+ * 返回
+ * @event globalEvent.androidback
+ * @type {object}
+ * @example
+ * var globalEvent = weex.requireModule('globalEvent');
+ * globalEvent.addEventListener("androidback", function (e) {
+ *       console.log(e)
+ * });
+ */
 
 module.exports = linkapi;
