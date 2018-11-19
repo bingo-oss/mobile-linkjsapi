@@ -239,7 +239,7 @@ var linkapi = {
      * @param params.content {string} 公告内容
      * @param params.isImportant {boolean} 是否是重要公告
      */
-    openGroupBulletinDetail:function(params){
+    openGroupBulletinDetail: function (params) {
         link.openGroupBulletinDetail([params]);
     },
 
@@ -252,7 +252,7 @@ var linkapi = {
      * @param params.content {string} 公告内容
      * @param params.isImportant {boolean} 是否是重要公告
      */
-    startGroupBulletinEdit:function(params){
+    startGroupBulletinEdit: function (params) {
         link.startGroupBulletinEdit([params]);
     },
 
@@ -423,7 +423,7 @@ var linkapi = {
      * @param  {function} error   失败回调函数,返回失败原因
      * @return {object}  包含字段: 1-{user:[{name:,userId:}]",2-{group:[{name:,groupId:}]},3-{user:[{name:,userId:}],group:[{name:,groupId:}]},4-{organization:[{name:,orgId:}]},5-{user:[{name:,userId:}],organization:[{name:,orgId:}]},8-4-{account:[{name:,accountId:}]}
      */
-    startContactMulitSelector: function (title, dataType, extraParams, success, error,extraHeadItems) {
+    startContactMulitSelector: function (title, dataType, extraParams, success, error, extraHeadItems) {
         extraParams = extend({
             userSelected: [],
             groupSelected: [],
@@ -433,8 +433,8 @@ var linkapi = {
             organizationIgnore: [],
             isIncludeDisableUser: false
         }, extraParams);
-        extraHeadItems=extraHeadItems||{};
-        link.startContactMulitSelector([title, dataType, extraParams,extraHeadItems], success, error);
+        extraHeadItems = extraHeadItems || {};
+        link.startContactMulitSelector([title, dataType, extraParams, extraHeadItems], success, error);
     },
 
     /**
@@ -442,8 +442,8 @@ var linkapi = {
      * @method linkapi.getSelectedListContactSelector
      * @param callback {function} callback
      */
-    getSelectedListContactSelector:function (callback) {
-        link.getSelectedList_ContactSelector([],callback);
+    getSelectedListContactSelector: function (callback) {
+        link.getSelectedList_ContactSelector([], callback);
     },
 
     /**
@@ -451,7 +451,7 @@ var linkapi = {
      * @method linkapi.addSelectedContactSelector
      * @param model {object} id,name,icon,type
      */
-    addSelectedContactSelector:function (model) {
+    addSelectedContactSelector: function (model) {
         link.addSelected_ContactSelector([model]);
     },
 
@@ -460,7 +460,7 @@ var linkapi = {
      * @method linkapi.removeSelected_ContactSelector
      * @param model {object} id,name,icon,type
      */
-    removeSelected_ContactSelector:function (model) {
+    removeSelected_ContactSelector: function (model) {
         link.removeSelected_ContactSelector([model]);
     },
 
@@ -682,7 +682,7 @@ var linkapi = {
             }
         }
         //weex应用才将参数加到url后面
-        if(url.endsWith("js")){
+        if (url.endsWith("js")) {
             if (params.appUrl) {
                 if (url.indexOf('?') < 0) {
                     url += "?";
@@ -698,7 +698,7 @@ var linkapi = {
      * 执行指令的接口
      * @method linkapi.launchLinkService
      */
-    launchLinkService : function (params, success, error) {
+    launchLinkService: function (params, success, error) {
         link.launchLinkService([params], success, error);
     },
 
@@ -1021,7 +1021,7 @@ var linkapi = {
      * @method linkapi.querySchedule
      */
     queryAllSchedule: function (successCallback, failCallback) {
-        schedule.queryAllSchedule(successCallback,failCallback);
+        schedule.queryAllSchedule(successCallback, failCallback);
     },
 
     /**
@@ -1135,7 +1135,7 @@ var linkapi = {
         link.launchLinkServiceWithDictionary([{
             code: "OpenBuiltIn",
             key: "StartNewDisk",
-            naviStyle:3
+            naviStyle: 3
         }], null, null);
     },
 
@@ -1154,18 +1154,18 @@ var linkapi = {
      * @param params.data {object} 请求数据，自动拼接到url后面
      * @return {Promise.<TResult>} 成功: resolve(data, status, statusText), 失败: reject(status, statusText)
      */
-    fetch(method,params){
+    fetch(method, params){
         return this.getToken().then(res => {
             let token = res["accessToken"];
             params.headers = params.headers || {};
             params.headers["Authorization"] = "Bearer" + token;
-            return ajax.exec(method,params).catch((status, statusText) => {
+            return ajax.exec(method, params).catch((status, statusText) => {
                 if (status == 401) {
                     return this.refreshToken().then(res => {
                         token = res["accessToken"];
                         params.headers = params.headers || {};
                         params.headers["Authorization"] = "Bearer" + token;
-                        return ajax.exec(method,params);
+                        return ajax.exec(method, params);
                     });
                 } else {
                     return Promise.reject(status, statusText);
@@ -1185,7 +1185,7 @@ var linkapi = {
      * @return {Promise.<TResult>} 成功: resolve(data, status, statusText), 失败: reject(status, statusText)
      */
     get(params){
-        return this.fetch("GET",params);
+        return this.fetch("GET", params);
     },
 
     /**
@@ -1199,7 +1199,7 @@ var linkapi = {
      * @return {Promise.<TResult>} 成功: resolve(data, status, statusText), 失败: reject(status, statusText)
      */
     post(params){
-        return this.fetch("POST",params);
+        return this.fetch("POST", params);
     },
 
     /**
@@ -1213,7 +1213,7 @@ var linkapi = {
      * @return {Promise.<TResult>} 成功: resolve(data, status, statusText), 失败: reject(status, statusText)
      */
     delete(params){
-        return this.fetch("DELETE",params);
+        return this.fetch("DELETE", params);
     },
 
     /**
@@ -1227,7 +1227,7 @@ var linkapi = {
      * @return {Promise.<TResult>} 成功: resolve(data, status, statusText), 失败: reject(status, statusText)
      */
     put(params){
-        return this.fetch("PUT",params);
+        return this.fetch("PUT", params);
     },
 
     // /**
@@ -1358,10 +1358,10 @@ var linkapi = {
      * @param success {function} 成功回调函数
      * @param error {function} 失败回调函数
      */
-    selectFiles:function(type,success,error){
-        try{
-            link.selectResourceFiles([type],success,error);
-        }catch (e){
+    selectFiles: function (type, success, error) {
+        try {
+            link.selectResourceFiles([type], success, error);
+        } catch (e) {
         }
     },
 
@@ -1372,10 +1372,10 @@ var linkapi = {
      * @param success {function} 成功回调函数
      * @param error {function} 失败回调函数
      */
-    uploadFiles:function(resArray,success,error){
-        try{
-            link.uploadResourceFiles(resArray,success,error);
-        }catch (e){
+    uploadFiles: function (resArray, success, error) {
+        try {
+            link.uploadResourceFiles(resArray, success, error);
+        } catch (e) {
 
         }
     },
@@ -1385,10 +1385,10 @@ var linkapi = {
      * @method linkapi.openFile
      * @param res {object} 资源对象，从selectFiles获取到的对象
      */
-    openFile:function(res){
-        try{
+    openFile: function (res) {
+        try {
             link.openResourceFile([res])
-        }catch (e){
+        } catch (e) {
 
         }
 
@@ -1400,10 +1400,10 @@ var linkapi = {
      * @param type {number} 聊天类型 私聊=1 群组=2 部门=4 服务号=5
      * @param key {string} 广播接收器的code，可以传入服务号的code,type=5时, 为服务号的code,否则为talkWithId
      */
-    registerReceiver:function(type,key){
-        try{
-            link.registerReceiver([type,key]);
-        }catch (e){
+    registerReceiver: function (type, key) {
+        try {
+            link.registerReceiver([type, key]);
+        } catch (e) {
         }
     },
 
@@ -1414,10 +1414,10 @@ var linkapi = {
      * @param params.appCode {string} 编码,如业务大厅编码businesscenter
      * @param params.unReadCount {number}  消息数量
      */
-    updateMessageTabBadge:function(params){
-        try{
+    updateMessageTabBadge: function (params) {
+        try {
             link.updateMessageTabBadge([params]);
-        }catch (e){
+        } catch (e) {
 
         }
     },
@@ -1427,10 +1427,10 @@ var linkapi = {
     //  * @method linkapi.sendExitEvent
     //  * @param code {string} 应用appcode
 
-    sendExitEvent:function(code){
-        try{
+    sendExitEvent: function (code) {
+        try {
             link.sendExitEvent([code]);
-        }catch (e){
+        } catch (e) {
 
         }
     },
@@ -1440,10 +1440,10 @@ var linkapi = {
      * @method linkapi.cancelMsgNtf
      * @param id {string}  可以是私聊、群组、服务号等聊天对象Id
      */
-    cancelMsgNtf:function (id) {
-        try{
+    cancelMsgNtf: function (id) {
+        try {
             link.cancelMsgNtf([id]);
-        }catch (e){
+        } catch (e) {
 
         }
     },
@@ -1453,10 +1453,10 @@ var linkapi = {
      * @method linkapi.cancelMsgNtfByCategoryId
      * @param categoryId
      */
-    cancelMsgNtfByCategoryId:function (categoryId) {
-        try{
+    cancelMsgNtfByCategoryId: function (categoryId) {
+        try {
             link.cancelMsgNtfByCategoryId([categoryId]);
-        }catch (e){
+        } catch (e) {
 
         }
     },
@@ -1467,10 +1467,10 @@ var linkapi = {
      * @param id {string} 可以是私聊、群组、服务号等聊天对象Id
      * @param tip {string} 未读数或者文本
      */
-    setChatActionTip:function (id,tip) {
-        try{
-            link.setChatActionTip([id,tip]);
-        }catch (e){
+    setChatActionTip: function (id, tip) {
+        try {
+            link.setChatActionTip([id, tip]);
+        } catch (e) {
 
         }
     },
@@ -1486,10 +1486,10 @@ var linkapi = {
      * @param msgObj.content {string} 消息体（todo)
      * @param msgObj.msgType {string} 消息类型 (todo)
      */
-    sendMessage:function (msgObj,success,error) {
-        try{
-            link.sendMessage([msgObj],success,error);
-        }catch (e){
+    sendMessage: function (msgObj, success, error) {
+        try {
+            link.sendMessage([msgObj], success, error);
+        } catch (e) {
 
         }
     },
@@ -1502,23 +1502,23 @@ var linkapi = {
      * @param success {function} 成功回调函数，返回文本内容
      * @param error {function} 失败回调函数，返回错误信息
      */
-    readTextFromFile:function (filePath,charset,success,error) {
-        if(filePath.startsWith("http")){
-            ajax.exec("GET",{url:filePath}).then(success).catch(error);
-        }else{
-            try{
-                filePath=filePath.replace('file:','');
-                link.readTextFromFile([filePath, charset],(res)=>{
-                    try{
-                        if(typeof res=="string"){
-                            res=JSON.parse(res);
+    readTextFromFile: function (filePath, charset, success, error) {
+        if (filePath.startsWith("http")) {
+            ajax.exec("GET", {url: filePath}).then(success).catch(error);
+        } else {
+            try {
+                filePath = filePath.replace('file:', '');
+                link.readTextFromFile([filePath, charset], (res) => {
+                    try {
+                        if (typeof res == "string") {
+                            res = JSON.parse(res);
                         }
                         success(res);
-                    }catch(e){
+                    } catch (e) {
                         error(e);
                     }
-                },error);
-            }catch (e){
+                }, error);
+            } catch (e) {
                 error(e);
             }
         }
@@ -1529,10 +1529,10 @@ var linkapi = {
      * @method linkapi.startSearch
      * @param keyword {string} 关键字
      */
-    startSearch:function (keyword) {
-        try{
-            link.startSearch([keyword],null,null);
-        }catch (e){
+    startSearch: function (keyword) {
+        try {
+            link.startSearch([keyword], null, null);
+        } catch (e) {
 
         }
     },
@@ -1554,8 +1554,8 @@ var linkapi = {
      * @param success {function} 成功回调函数
      * @param error {function} 失败回调函数，返回错误信息
      */
-    getLoginCookies: function (success,error) {
-        link.getLoginCookies([],success,error)
+    getLoginCookies: function (success, error) {
+        link.getLoginCookies([], success, error)
     },
 
     /**
@@ -1564,8 +1564,8 @@ var linkapi = {
      * @param success {function} 成功回调函数
      * @param error {function} 失败回调函数，返回错误信息
      */
-    getDomainRequireAuthUrls: function (success,error) {
-        link.getDomainRequireAuthUrls([],success,error);
+    getDomainRequireAuthUrls: function (success, error) {
+        link.getDomainRequireAuthUrls([], success, error);
     },
 
     /**
@@ -1576,7 +1576,7 @@ var linkapi = {
      * @param {function} error 错误信息
      */
     getImage: function (image, success, error) {
-        link.getImage([image],success,error);
+        link.getImage([image], success, error);
     },
 
     /**
@@ -1598,7 +1598,7 @@ var linkapi = {
     openTodo: function (params) {
         link.launchLinkServiceWithDictionary([{
             code: "UnityTodo",//固定参数
-            defaultIndex : params.defaultIndex
+            defaultIndex: params.defaultIndex
         }], null, null);
     },
 
@@ -1609,7 +1609,7 @@ var linkapi = {
     startEmail: function () {
         link.launchLinkServiceWithDictionary([{
             code: "OpenBuiltIn",//固定参数
-            key : "StartEmail"
+            key: "StartEmail"
         }], null, null);
     },
 
@@ -1619,8 +1619,8 @@ var linkapi = {
      * @param success {function} 成功回调函数，返回文本内容
      * @param error {function} 失败回调函数，返回错误信息
      */
-    getEmailUnreadCount : function (success,error) {
-        link.getEmailUnreadCount(success,error);
+    getEmailUnreadCount: function (success, error) {
+        link.getEmailUnreadCount(success, error);
     },
 
     /**
@@ -1630,7 +1630,7 @@ var linkapi = {
     openOnlineServicer: function () {
         link.launchLinkServiceWithDictionary([{
             code: "OpenBuiltIn",
-            key : "OnlineServicer"
+            key: "OnlineServicer"
         }], null, null);
     },
 
@@ -1641,11 +1641,7 @@ var linkapi = {
      * @method linkapi.getServerConfigs
      */
     getServerConfigs: function (success, error) {
-        try{
-            link.getServerConfigs([],success, error);
-        }catch(e){
-            
-        }
+        link.getServerConfigs([], success, error);
     },
 
     /**
@@ -1653,11 +1649,7 @@ var linkapi = {
      * @method linkapi.hideKeyboard
      */
     hideKeyboard: function () {
-        try{
-            app.hideKeyboard([]);
-        }catch(e){
-
-        }
+        app.hideKeyboard();
     },
 
 
@@ -1667,11 +1659,7 @@ var linkapi = {
      * @param success {function} 成功回调函数
      */
     getIMEI: function (success) {
-        try{
-            app.getIMEI([], success);
-        }catch(e){
-
-        }
+        app.getIMEI(success);
     },
 
 
@@ -1681,7 +1669,7 @@ var linkapi = {
      * @param {string} phoneNum 电话号码
      */
     call: function (phoneNum) {
-        app.call([phoneNum], null, null);
+        app.call(phoneNum);
     },
 
     /**
@@ -1691,7 +1679,7 @@ var linkapi = {
      * @param {string} params.title 标题文本
      */
     showLoading: function (params) {
-        app.showLoading([params], null, null);
+        app.showLoading(params);
     },
 
     /**
@@ -1699,11 +1687,7 @@ var linkapi = {
      * @method linkapi.hideLoading
      */
     hideLoading: function () {
-        try{
-            app.hideLoading([], null, null);
-        }catch(e){
-
-        }
+        app.hideLoading();
     },
 
     /**
@@ -1713,7 +1697,7 @@ var linkapi = {
      * @param {string} params.title 标题文本
      */
     showSuccess: function (params) {
-        app.showSuccess([params], null, null);
+        app.showSuccess(params);
     },
 
     /**
@@ -1723,7 +1707,7 @@ var linkapi = {
      * @param {string} params.title 标题文本
      */
     showError: function (params) {
-        app.showError([params], null, null);
+        app.showError(params);
     },
 
 
@@ -1751,11 +1735,7 @@ var linkapi = {
      * @param {cameraCallback} [callback] - 回调函数
      */
     captureImage: function (params, callback) {
-        try{
-            camera.captureImage([params], callback);
-        }catch(e){
-
-        }
+        camera.captureImage(params, callback);
     },
 
     /**
@@ -1770,11 +1750,7 @@ var linkapi = {
      * @param {cameraCallback} [callback] - 回调函数
      */
     selectImage: function (params, callback) {
-        try{
-            camera.selectImage([params], callback);
-        }catch(e){
-
-        }
+        camera.selectImage(params, callback);
     },
 
     /**
@@ -1789,11 +1765,7 @@ var linkapi = {
      * @param {cameraCallback} [callback] - 回调函数
      */
     cropImage: function (params, callback) {
-        try{
-            camera.cropImage([params], callback);
-        }catch(e){
-
-        }
+        camera.cropImage(params, callback);
     },
 
     /**
@@ -1808,11 +1780,7 @@ var linkapi = {
      * @param {cameraCallback} [callback] - 回调函数
      */
     compressImage: function (params, callback) {
-        try{
-            camera.compressImage([params], callback);
-        }catch(e){
-
-        }
+        camera.compressImage(params, callback);
     },
 
     /**
@@ -1825,11 +1793,7 @@ var linkapi = {
      * @param  {function} error    失败回调，返回错误信息
      */
     imgToBase64: function (params, success, error) {
-        try{
-            camera.imgToBase64([params], success, error);
-        }catch(e){
-
-        }
+        camera.imgToBase64(params, success, error);
     },
 
 
@@ -1850,11 +1814,7 @@ var linkapi = {
      * @param {errorCallback} [error] - 失败回调函数，返回错误原因
      */
     fileOpenFile: function (uri, params, success, error) {
-        try{
-            file.openFile([uri, params], success, error);
-        }catch(e){
-
-        }
+        file.openFile(uri, params, success, error);
     },
 
     /**
@@ -1870,11 +1830,7 @@ var linkapi = {
      * @param {errorCallback} [error] - 失败回调函数，返回错误原因，例如无权限
      */
     selectFile: function (success, error) {
-        try{
-            file.selectFile([], success, error);
-        }catch(e){
-
-        }
+         file.selectFile(success, error);
     },
 
     /**
@@ -1883,12 +1839,8 @@ var linkapi = {
      * @param {String} [file] - 文件本地路径
      * @param {function} [callback] - 成功回调函数，返回true/false
      */
-    exist: function (file, callback) {
-        try{
-            file.exist([file], callback);
-        }catch(e){
-
-        }
+    exist: function (filePath, callback) {
+        file.exist(filePath, callback);
     },
 
     /**
@@ -1897,11 +1849,7 @@ var linkapi = {
      * @param {function} [callback] - 回调函数，返回应用能够读写的目录
      */
     getAppDirectroy: function (callback) {
-        try{
-            file.getAppDirectroy([], callback);
-        }catch(e){
-
-        }
+        file.getAppDirectroy(callback);
     },
 
     /**
@@ -1943,7 +1891,7 @@ var linkapi = {
      * @param {errorCallback} [error] - 失败回调函数
      */
     download: function (url, params, progress, success, error) {
-        fileTransfer.download([url, params], progress, success, error);
+        fileTransfer.download(url, params, progress, success, error);
     },
 
     /**
@@ -1952,7 +1900,7 @@ var linkapi = {
      * @param  {string} url 下载中的 url
      */
     pauseDownload: function (url) {
-        fileTransfer.pauseDownload([url], null, null);
+        fileTransfer.pauseDownload(url);
     },
 
     /**
@@ -1961,7 +1909,7 @@ var linkapi = {
      * @param  {string} url 下载中的 url
      */
     resumeDownload: function (url) {
-        fileTransfer.resumeDownload([url], null, null);
+        fileTransfer.resumeDownload(url);
     },
 
     /**
@@ -1970,7 +1918,7 @@ var linkapi = {
      * @param  {string} url 下载中的 url
      */
     cancelDownload: function (url) {
-        fileTransfer.cancelDownload([url], null, null);
+        fileTransfer.cancelDownload(url);
     },
 
     /**
@@ -1987,7 +1935,7 @@ var linkapi = {
      * @param {errorCallback} [error] - 失败回调函数
      */
     upload: function (file, serverUrl, params, progress, success, error) {
-        fileTransfer.upload([file, serverUrl, params], progress, success, error);
+        fileTransfer.upload(file, serverUrl, params, progress, success, error);
     },
 
     /**
@@ -1996,7 +1944,7 @@ var linkapi = {
      * @param  {string} serverUrl 上传中的 url
      */
     cancelUpload: function (serverUrl) {
-        fileTransfer.cancelUpload([serverUrl], null, null);
+        fileTransfer.cancelUpload(serverUrl);
     },
 
     /**
@@ -2019,7 +1967,7 @@ var linkapi = {
      * );
      */
     open: function (dbName, success, error) {
-        sqlite.open([dbName], success, error);
+        sqlite.open(dbName, success, error);
     },
 
     /**
@@ -2035,7 +1983,7 @@ var linkapi = {
      * );
      */
     close: function (dbName, success, error) {
-        sqlite.close([dbName], success, error);
+        sqlite.close(dbName, success, error);
     },
 
     /**
@@ -2063,7 +2011,7 @@ var linkapi = {
      * );
      */
     execQuery: function (dbName, sql, success, error) {
-        sqlite.execQuery([dbName, sql], success, error);
+        sqlite.execQuery(dbName, sql, success, error);
     },
 
     /**
@@ -2080,7 +2028,7 @@ var linkapi = {
      * );
      */
     execSQL: function (dbName, sql, success, error) {
-        sqlite.execSQL([dbName, sql], success, error);
+        sqlite.execSQL(dbName, sql, success, error);
     },
 
     /**
@@ -2110,8 +2058,8 @@ var linkapi = {
      *     }
      * );
      */
-    query: function (dbName, tableName, columns, whereClause,  success, error) {
-        sqlite.query([dbName, tableName, columns, whereClause], success, error);
+    query: function (dbName, tableName, columns, whereClause, success, error) {
+        sqlite.query(dbName, tableName, columns, whereClause, success, error);
     },
 
     /**
@@ -2133,7 +2081,7 @@ var linkapi = {
      * );
      */
     insert: function (dbName, tableName, values, success, error) {
-        sqlite.insert([dbName, tableName, values], success, error);
+        sqlite.insert(dbName, tableName, values, success, error);
     },
 
     /**
@@ -2156,7 +2104,7 @@ var linkapi = {
      * );
      */
     update: function (dbName, tableName, values, whereClause, success, error) {
-        sqlite.update([dbName, tableName, values, whereClause], success, error);
+        sqlite.update(dbName, tableName, values, whereClause, success, error);
     },
 
     /**
@@ -2178,7 +2126,7 @@ var linkapi = {
      * );
      */
     deleteSqlite: function (dbName, tableName, whereClause, success, error) {
-        sqlite.delete([dbName, tableName, whereClause], success, error);
+        sqlite.delete(dbName, tableName, whereClause, success, error);
     },
 
     /**
@@ -2210,7 +2158,7 @@ var linkapi = {
      * );
      */
     transaction: function (dbName, sql, success, error) {
-        sqlite.transaction([dbName, sql], success, error);
+        sqlite.transaction(dbName, sql, success, error);
     },
 
     /**
@@ -2221,7 +2169,7 @@ var linkapi = {
      * @param {function} [success] - 成功回调函数
      * @param {function} [error] - 失败回调函数, errMsg 表示失败原因
      * @example
-     * linkapi.execSQL("test.db", "drop table Persons",
+     * linkapi.dropTable("test.db", "Persons",
      *    function(){
      *        console.log("drop table success!");
      *    },
@@ -2231,7 +2179,7 @@ var linkapi = {
      * );
      */
     dropTable: function (dbName, tableName, success, error) {
-        sqlite.dropTable([dbName, tableName], success, error);
+        sqlite.dropTable(dbName, tableName, success, error);
     },
 
     /**
@@ -2243,16 +2191,15 @@ var linkapi = {
      * @param {bool} params.isVideoMuteOnFirstPlay 是否静音播放点击进来的视频，默认 false
      * @param {bool} params.isOptionEnable  是否允许进行保存网盘，分享聊天等操作，默认 true
      */
-    browseMultiMedia: function (params){
+    browseMultiMedia: function (params) {
         params = extend({
-            data:[],
-            position:0,
-            isVideoMuteOnFirstPlay:false,
-            isOptionEnable:true
+            data: [],
+            position: 0,
+            isVideoMuteOnFirstPlay: false,
+            isOptionEnable: true
         }, params);
-        link.browseMultiMedia([params],null, null);
+        link.browseMultiMedia(params);
     }
-
 
 }
 
