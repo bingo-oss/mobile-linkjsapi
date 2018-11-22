@@ -2199,6 +2199,16 @@ var linkapi = {
             isOptionEnable: true
         }, params);
         link.browseMultiMedia(params);
+    },
+
+    /**
+     * 获取当前位置信息
+     * @method getLocation
+     * @param {function} success 成功回调函数，返回对象 {latitude:23.177897,longitude:113.420305,address:"中国广东省广州市天河区天政街"}
+     * @param {function} error 失败回调函数，返回错误信息
+     */
+    getLocation: function(success,error){
+        link.getLocation([],success,error);
     }
 
 }
