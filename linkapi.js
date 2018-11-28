@@ -2215,7 +2215,7 @@ var linkapi = {
             else res = JSON.parse(res.comInfo).cmdType;
             success && success(res, message);
         });
-    }
+    },
 
     /**
      * 获取当前位置信息
