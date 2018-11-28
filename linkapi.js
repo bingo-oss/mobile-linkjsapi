@@ -2251,6 +2251,21 @@ var linkapi = {
             isOptionEnable:true
         }, params);
         link.browseMultiMedia([params],null, null);
+    },
+    
+    /**
+     * 获取注册事件返回的消息体、cmd值
+     * @method linkapi.getLocation
+     * @param {function} success 成功回调函数，返回值cmd 、消息体。
+     */
+    getMsgCmd: function(registerReceiverName, success){
+        globalEvent.addEventListener( registerReceiverName ,(res)=>{
+            var message = res;
+            res = JSON.parse(res.message);
+            if(WXEnvironment && WXEnvironment.platform === 'android') res = JSON.parse(res.content).cmd;
+            else res = JSON.parse(res.comInfo).cmdType;
+            success && success(res, message);
+        });
     }
 
 
