@@ -834,6 +834,18 @@ var linkapi = {
     },
 
     /**
+     * 打开个人设置页面
+     * @method linkapi.openMe
+     */
+    openMe: function () {
+        link.launchLinkServiceWithDictionary([{
+            code: "OpenSubMenu",
+            key: "setting",
+            module: "MySelf"
+        }], null, null);
+    },
+
+    /**
      * 打开关于页面
      * @method linkapi.openAbout
      */
@@ -1540,9 +1552,20 @@ var linkapi = {
 
     /**
      * 打开语音助手
-     * @method linkapi.openSpeechAssistant
+     * @method linkapi.speechAssistant
      */
     speechAssistant: function () {
+        link.launchLinkServiceWithDictionary([{
+            code: "OpenBuiltIn",
+            key: "SpeechAssistant"
+        }], null, null);
+    },
+
+    /**
+     * 打开语音助手
+     * @method linkapi.openSpeechAssistant
+     */
+    openSpeechAssistant: function () {
         link.launchLinkServiceWithDictionary([{
             code: "OpenBuiltIn",
             key: "SpeechAssistant"
@@ -2201,7 +2224,17 @@ var linkapi = {
         }, params);
         link.browseMultiMedia(params);
     },
-    
+
+    /**
+     * 获取当前位置信息
+     * @method linkapi.getLocation
+     * @param {function} success 成功回调函数，返回对象 {latitude:23.177897,longitude:113.420305,address:"中国广东省广州市天河区天政街"}
+     * @param {function} error 失败回调函数，返回错误信息
+     */
+    getLocation: function(success,error){
+        link.getLocation([],success,error);
+    },
+
     /**
      * 获取注册事件返回的消息体、cmd值
      * @method linkapi.getLocation
@@ -2212,19 +2245,13 @@ var linkapi = {
             var message = res;
             res = JSON.parse(res.message);
             if(WXEnvironment && WXEnvironment.platform === 'android') res = JSON.parse(res.content).cmd;
-            else res = JSON.parse(res.comInfo).cmdType;
+            else{
+                if( typeof res.cmdInfo == "string") res = JSON.parse(res.cmdInfo);
+                else res = res.cmdInfo;
+                res = res.cmdType;
+            }
             success && success(res, message);
         });
-    },
-
-    /**
-     * 获取当前位置信息
-     * @method getLocation
-     * @param {function} success 成功回调函数，返回对象 {latitude:23.177897,longitude:113.420305,address:"中国广东省广州市天河区天政街"}
-     * @param {function} error 失败回调函数，返回错误信息
-     */
-    getLocation: function(success,error){
-        link.getLocation([],success,error);
     }
 
 }
