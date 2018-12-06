@@ -2242,17 +2242,35 @@ var linkapi = {
      */
     getMsgCmd: function(registerReceiverName, success){
         globalEvent.addEventListener( registerReceiverName ,(res)=>{
-            var message = res;
+            var newMsg = JSON.parse(JSON.stringify(res));
+            var msgObj = {};
+            msgObj = newMsg;
             res = JSON.parse(res.message);
-            if(WXEnvironment && WXEnvironment.platform === 'android') res = JSON.parse(res.content).cmd;
-            else{
+            msgObj.message = JSON.parse(newMsg.message);
+            if(WXEnvironment && WXEnvironment.platform === 'android') {
+                msgObj.message.content = JSON.parse(msgObj.message.content);
+                msgObj.message.content.params = JSON.parse(msgObj.message.content.params);
+                res = JSON.parse(res.content).cmd;
+            }else{
                 if( typeof res.cmdInfo == "string") res = JSON.parse(res.cmdInfo);
                 else res = res.cmdInfo;
+                msgObj.message.cmdInfo = res;
+                msgObj.message.cmdInfo.params = JSON.parse(res.params);
                 res = res.cmdType;
             }
-            success && success(res, message);
+            success && success(res, msgObj);
         });
-    }
+    },
+    /**
+     * 打开我的页面
+     * @method linkapi.openMySelf
+     */
+    openMySelf: function () {
+        link.launchLinkServiceWithDictionary([{
+            code: "OpenBuiltIn",
+            key: "MySelf",
+        }], null, null);
+    },
 
 }
 
