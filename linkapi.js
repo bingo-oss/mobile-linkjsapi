@@ -636,15 +636,15 @@ var linkapi = {
         }], null, null);
     },
 
-    // *
-    //  * 接口废弃
-    //  * 打开个人动态主页
-    //  * @method linkapi.openMyMicroblog
+    /**
+     * 打开我的动态主页
+     * @method linkapi.openMyMicroblog
+     */
 
     openMyMicroblog: function () {
         link.launchLinkServiceWithDictionary([{
             code: "OpenBuiltIn",
-            key: "MyMicroBlog"
+            key: "MyBlogCard"
         }], null, null);
     },
 
@@ -679,7 +679,7 @@ var linkapi = {
         if (params.data) {
             for (var key in params.data) {
                 dataStr += ("\n" + key + "=" + params.data[key]);
-                urlParams += (key + "=" + encodeURIComponent(params[key]) + "&");
+                urlParams += (key + "=" + encodeURIComponent(params.data[key]) + "&");
             }
         }
         //weex应用才将参数加到url后面
@@ -1367,7 +1367,7 @@ var linkapi = {
     /**
      * 发起选择文件资源
      * @method linkapi.selectFiles
-     * @param type {number} 范围0~5，0：拍照 1：选择图片  2 本地文件单选  3：云盘文件  4: 界与聊天里的文件跳转后界面相同，选择最近聊天文件和本地文件  5: 本地文件多选
+     * @param type {number} 范围0~5，0：拍照 1：选择图片  2 本地文件单选  3：云盘文件  4: 界与聊天里的文件跳转后界面相同，选择最近聊天文件和本地文件(仅支持安卓)  5: 本地文件多选(仅支持安卓)
      * @param success {function} 成功回调函数
      * @param error {function} 失败回调函数
      */
