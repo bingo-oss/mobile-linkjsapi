@@ -10,7 +10,7 @@ let ajax = {
             let timeout = params.timeout || 30000;
 
             if(method=="GET"){
-                if (!url.includes("?")) {
+                if (url.indexOf("?")<0) {
                     url += "?";
                 }
                 if (typeof data == "object") {

@@ -2271,6 +2271,27 @@ var linkapi = {
         }], null, null);
     },
 
+    /**
+     * 获取sdcard目录
+     * @method linkapi.getSdcardAppDir
+     * @param success
+     * @param error
+     */
+    getSdcardAppDir: function (success, error) {
+        link.getSdcardAppDir([], success, error);
+    },
+
+    /**
+     * 保存图片到相册
+     * @method linkapi.saveFileToGallery
+     * @param obj 对应前端应该是一个json对象，需要path字段，另外还有一个type字段，如果是图片type字段可以不传
+     * @param success
+     * @param error
+     */
+    saveFileToGallery: function (obj,success, error) {
+        link.saveFileToGallery([obj], success, error);
+    }
+
 }
 
 /**
