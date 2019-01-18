@@ -839,8 +839,7 @@ var linkapi = {
      */
     openMe: function () {
         link.launchLinkServiceWithDictionary([{
-            code: "OpenSubMenu",
-            key: "setting",
+            code: "OpenBuiltIn",
             module: "MySelf"
         }], null, null);
     },
