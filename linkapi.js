@@ -670,12 +670,13 @@ var linkapi = {
      * @param params.appCode {string} 应用市场中填写的编码
      * @param params.appUrl {string} 启动页面地址
      * @param params.data {object} 启动目标应用后，通过getPageParams获取
+     * @param params.recordAction {bool} 记录操作行为,默认false，设置为 true 的时候只使用appCode，其他参数无效
      */
     runApp: function (params, success, error) {
         var dataStr = "";
         var url = params.appUrl;
         var urlParams = "";
-
+        var recordAction = params.recordAction || false;
         if (params.data) {
             for (var key in params.data) {
                 dataStr += ("\n" + key + "=" + params.data[key]);
@@ -690,6 +691,11 @@ var linkapi = {
                 }
                 url += urlParams;
             }
+        }
+        //应用启动的时候，在后台会记录操作情况,用于统计
+        if(recordAction){
+            link.startApp(params.appCode);
+            return;
         }
         params = "[OpenApp]\nappCode=" + params.appCode + (params.appUrl ? "\nappUrl=" + url : "") + dataStr;
         link.launchLinkService([params], success, error);
