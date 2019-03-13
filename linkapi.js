@@ -674,7 +674,7 @@ var linkapi = {
      */
     runApp: function (params, success, error) {
         var dataStr = "";
-        var url = params.appUrl;
+        var url = params.appUrl || "";
         var urlParams = "";
         var recordAction = params.recordAction || false;
         if (params.data) {
@@ -693,8 +693,9 @@ var linkapi = {
             }
         }
         //应用启动的时候，在后台会记录操作情况,用于统计
-        if(recordAction){
-            link.startApp(params.appCode);
+        var isSupport = weex.supports('@module/LinkModule.startApp');
+        if(recordAction && isSupport){
+            link.startApp([params.appCode], success, error);
             return;
         }
         params = "[OpenApp]\nappCode=" + params.appCode + (params.appUrl ? "\nappUrl=" + url : "") + dataStr;
