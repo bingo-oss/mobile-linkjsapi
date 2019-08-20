@@ -1,6 +1,6 @@
 {
   "name": "linkapi",
-  "version": "0.3.31",
+  "version": "0.3.32",
   "description": "Link平台提供给Weex开发者调用的jsapi",
   "main": "linkapi.js",
   "scripts": {},
