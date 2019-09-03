@@ -2635,6 +2635,21 @@ var linkapi = {
    */
   saveFileToGallery: function(obj, success, error) {
     link.saveFileToGallery([obj], success, error);
+  },
+
+  /**
+   * 添加用户行为日志
+   * @param {Object} params 参数对象
+   * @param {String} moduleCategory 模块分类
+   * @param {String} moduleName 模块名称
+   * @param {String} eventType 事件类型
+   * @param {String} eventEntry 事件入口
+   * @param {String} eventParams 事件参数
+   * @param {String} targetId 操作对象id（userid/groupid等)
+   * @param {String} targetName 操作对象名称
+   */
+  addAnalysisLog: function(params) {
+    link.addAnalysisLog([params],null,null);
   }
 };
 
