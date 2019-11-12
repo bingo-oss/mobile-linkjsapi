@@ -1367,6 +1367,12 @@ var linkapi = {
    * 内容分享到聊天（个人/群组)
    * @method linkapi.shareToMessage
    * @param params {object} 分享参数
+   * @param params.title {string} 分享标题
+   * @param params.brief {string} 分享的内容简要
+   * @param params.content {string} 分享内容，可以是指令/url/文本内容
+   * @param params.pcHomeUrl {string} 分享链接 link pc端使用
+   * @param params.icon {string} 分享图标链接
+   * @param params.type {string} 类型 ACTION 使用指令/WEBSITE(打开网站)/PICTURE(分享图片)
    * @param success {function} 分享成功后回调
    * @param error {function}  分享失败后回调
    */
@@ -1385,7 +1391,19 @@ var linkapi = {
   /**
    * 内容分享到动态
    * @method linkapi.shareToBlog
-   * @param params {object} 分享参数
+   * @param params.title {string} 分享标题
+   * @param params.brief {string} 分享的内容简要
+   * @param params.content {string} 分享内容，可以是指令/url/文本内容
+   * @param params.pcHomeUrl {string} 分享链接 link pc端使用
+   * @param params.icon {string} 分享图标链接
+   * @param params.type {string} 类型 ACTION 使用指令/WEBSITE(打开网站)/PICTURE(分享图片)
+   * @param params.action_content {string} json字符串，需要用JSON.stringify(action_content)
+   * 参考:
+   * var action_content = {
+      android:"[OpenUrl]\nurl=https://www.baidu.com",
+      ios:"[OpenUrl]\nurl=https://www.baidu.com",
+      pc:JSON.stringify({"urlParams":"https://www.baidu.com"})
+    };
    * @param success {function} 分享成功后回调
    * @param error {function}  分享失败后回调
    */
