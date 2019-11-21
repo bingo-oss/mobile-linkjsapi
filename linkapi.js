@@ -816,11 +816,11 @@ var linkapi = {
    * 该方法用于app里面启动app
    * @method linkapi.runApp
    * @param params{object} 启动应用的参数
-   * @param params.appObj {object} 启动应用时的额外参数，可传可不传
    * @param params.appCode {string} 应用市场中填写的编码
    * @param params.appUrl {string} 启动页面地址
    * @param params.data {object} 启动目标应用后，通过getPageParams获取
    * @param params.recordAction {bool} 记录操作行为,默认false，设置为 true 的时候只使用appCode，其他参数无效
+   * @param params.appObj {object} 启动应用时的额外参数，可选
    */
   runApp: function(params, success, error) {
     var dataStr = "";
@@ -845,8 +845,8 @@ var linkapi = {
     //应用启动的时候，在后台会记录操作情况,用于统计
     var isSupport = weex.supports("@module/LinkModule.startApp");
     if (recordAction && isSupport) {
-      if(params.appObj) link.startApp([params.appCode, params.appObj], success, error);
-      else link.startApp([params.appCode], success, error);
+      params.appObj = params.appObj || {};
+      link.startApp([params.appCode, params.appObj], success, error);
       return;
     }
     params =
