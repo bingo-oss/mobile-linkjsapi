@@ -1489,13 +1489,13 @@ var linkapi = {
     return this.getToken().then(res => {
       let token = res["accessToken"];
       params.headers = params.headers || {};
-      params.headers["Authorization"] = "Bearer" + token;
+      params.headers["Authorization"] = "Bearer " + token;
       return ajax.exec(method, params).catch((status, statusText) => {
         if (status == 401) {
           return this.refreshToken().then(res => {
             token = res["accessToken"];
             params.headers = params.headers || {};
-            params.headers["Authorization"] = "Bearer" + token;
+            params.headers["Authorization"] = "Bearer " + token;
             return ajax.exec(method, params);
           });
         } else {
