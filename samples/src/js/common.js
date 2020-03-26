@@ -1,4 +1,4 @@
-import linkapi from 'linkapi';
+import linkapi from '../../../linkapi';
 import {
     baseURL, ENV
 } from '../js/config.js';
