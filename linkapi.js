@@ -8,6 +8,8 @@ var fileTransfer = weex.requireModule("FileTransferModule");
 var app = weex.requireModule("AppModule");
 var globalEvent = weex.requireModule("globalEvent");
 var ajax = require("./ajax.js");
+var RecordVoice = weex.requireModule("RecordVoice");
+var Media = weex.requireModule("Media");
 
 var extend = function(obj, ext) {
   var key;
@@ -2670,6 +2672,38 @@ var linkapi = {
    */
   addAnalysisLog: function(params) {
     link.addAnalysisLog([params],null,null);
+  },
+
+  /**
+   * 开始录音 Android端使用
+   * @param {Object} params 参数对象
+   * @param {Object} savePath 录音的保存路径
+   * @param {function} success 成功回调
+   * @param {function} error 失败回调
+   */
+  recordStart: function(params, success, error) {
+      RecordVoice.recordStart([{"savePath": params.savePath}], success, error);
+  },
+
+  /**
+   * 结束录音 Android端使用
+   * @param {function} success 成功回调
+   * @param {function} error 失败回调
+   */
+  recordStop: function(success, error){
+    RecordVoice.recordStop([], success, error)
+  },
+
+  /**
+   * 转opus编码格式 Android端使用
+   * @param {Object} params 参数对象
+   * @param {Object} input 输入路径
+   * @param {Object} output 输出路径
+   * @param {function} success 成功回调
+   * @param {function} error 失败回调
+   */
+  toOpus: function(params, success, error){
+    Media.toOpus([{"input": params.input, "output": params.output}], success, error)
   }
 };
 
