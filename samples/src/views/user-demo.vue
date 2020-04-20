@@ -7,6 +7,7 @@
         </bui-header>
 
         <scroller>
+            <bui-cell @cellClick="addAnalysisLog" :title="'添加日志记录(addAnalysisLog)'"><bui-icon slot="action" name="ion-ios-arrow-right"></bui-icon></bui-cell>
             <bui-cell @cellClick="getLoginInfo" :title="'获取登陆后的用户信息(getLoginInfo)'"><bui-icon slot="action" name="ion-ios-arrow-right"></bui-icon></bui-cell>
             <bui-cell @cellClick="getToken" :title="'获取登录用户凭证 AccessToken(getToken)'"><bui-icon slot="action" name="ion-ios-arrow-right"></bui-icon></bui-cell>
             <bui-cell @cellClick="refreshToken" :title="'刷新平台的 AccessToken(refreshToken)'"><bui-icon slot="action" name="ion-ios-arrow-right"></bui-icon></bui-cell>
@@ -20,14 +21,16 @@
 
 <style lang="sass" src="bui-weex/src/css/buiweex.scss"></style>
 
+
 <script>
+    import linkapi from '../../../linkapi.js';
     module.exports = {
         data: function () {
             return {
                 leftItem: {
                     icon: 'ion-chevron-left'
                 },
-
+                linkapi: linkapi
             }
         },
         components: {
@@ -88,6 +91,18 @@
                 this.linkapi.getUserInfoByCellphoneOrEmail('17900000016', (res)=>{
                     this.linkapi.startUserChat(res.userId);
                 });
+            },
+                        addAnalysisLog() {
+                const params = {
+                    moduleCategory: 'im',
+                    moduleName: 'im-name',
+                    eventType: 'click',
+                    eventEntry: 'into',
+                    eventParams: 'test-param',
+                    targetId: 'userId',
+                    targetName: 'username'
+                };
+                this.linkapi.addAnalysisLog(params);
             }
         },
         mounted: function () {

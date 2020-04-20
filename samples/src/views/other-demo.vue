@@ -1,12 +1,13 @@
 <template>
     <div>
         <bui-header
-                title="云盘"
+                title="其他接口"
                 :leftItem="leftItem"
                 @leftClick="back">
         </bui-header>
 
         <scroller>
+            <bui-cell @cellClick="addAnalysisLog" :title="'添加日志记录(addAnalysisLog)'"><bui-icon slot="action" name="ion-ios-arrow-right"></bui-icon></bui-cell>
             <bui-cell @cellClick="updateTabBadge" :title="'更新消息的角标(updateTabBadge)'"><bui-icon slot="action" name="ion-ios-arrow-right"></bui-icon></bui-cell>
             <bui-cell @cellClick="getThemeColor" :title="'获取当前Link的主题颜色值(getThemeColor)'"><bui-icon slot="action" name="ion-ios-arrow-right"></bui-icon></bui-cell>
             <bui-cell @cellClick="openVideoRecord" :title="'打开录制小视频(openVideoRecord)'"><bui-icon slot="action" name="ion-ios-arrow-right"></bui-icon></bui-cell>
@@ -51,6 +52,9 @@
                     icon: 'ion-chevron-left'
                 }
             }
+        },
+        mounted() {
+            this.$alert(this.linkapi);
         },
         methods: {
             back() {
@@ -243,6 +247,18 @@
             },
             openOnlineServicer(){
                 this.linkapi.openOnlineServicer();
+            },
+            addAnalysisLog() {
+                const params = {
+                    moduleCategory: 'im',
+                    moduleName: 'im-name',
+                    eventType: 'click',
+                    eventEntry: 'into',
+                    eventParams: 'test-param',
+                    targetId: 'userId',
+                    targetName: 'username'
+                };
+                this.linkapi.addAnalysisLog(params);
             }
         }
     }
