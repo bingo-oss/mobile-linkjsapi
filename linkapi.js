@@ -2704,6 +2704,17 @@ var linkapi = {
    */
   toOpus: function(params, success, error){
     Media.toOpus([{"input": params.input, "output": params.output}], success, error)
+  },
+
+  /**
+   * 固定横竖屏
+   * @param params {object} 参数
+   * @param params.type 参数值 portrait:竖屏/landscape:横屏/auto:自动
+   * @param {Object} success 成功
+   * @param {Object} error 失败
+   */
+  setScreenOrientation: function(params, success, error){
+    link.setScreenOrientation([params], success, error)
   }
 };
 
