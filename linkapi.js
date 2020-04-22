@@ -2675,7 +2675,7 @@ var linkapi = {
   },
 
   /**
-   * 开始录音 Android端使用
+   * 开始录音 Android端使用 4.4.2
    * @param {Object} params 参数对象
    * @param {Object} savePath 录音的保存路径
    * @param {function} success 成功回调
@@ -2686,7 +2686,7 @@ var linkapi = {
   },
 
   /**
-   * 结束录音 Android端使用
+   * 结束录音 Android端使用 4.4.2
    * @param {function} success 成功回调
    * @param {function} error 失败回调
    */
@@ -2695,7 +2695,7 @@ var linkapi = {
   },
 
   /**
-   * 转opus编码格式 Android端使用
+   * 转opus编码格式 Android端使用 4.4.2
    * @param {Object} params 参数对象
    * @param {Object} input 输入路径
    * @param {Object} output 输出路径
@@ -2707,7 +2707,7 @@ var linkapi = {
   },
 
   /**
-   * 固定横竖屏
+   * 固定横竖屏 4.4.2
    * @param params {object} 参数
    * @param params.type 参数值 portrait:竖屏/landscape:横屏/auto:自动
    * @param {Object} success 成功
@@ -2715,6 +2715,34 @@ var linkapi = {
    */
   setScreenOrientation: function(params, success, error){
     link.setScreenOrientation([params], success, error)
+  },
+
+    /**
+   * 部门选择用户控件-单选 4.4.2
+   * @param params {object} 参数
+   * @param {string} params.title 提示
+   * @param {string} params.orgId 部门id
+   * @param {string} params.userIgnoreList 忽略某些用户
+   * @param {string} params.userFixSelectedList 固定选中用户
+   * @param {Object} success 成功
+   * @param {Object} error 失败
+   */
+  startOrganUserSingleSelector: function(params, success, error){
+    link.startOrganUserSingleSelector([params], success, error)
+  },
+
+  /**
+   * 部门选择控件-多选 4.4.2
+   * @param params {object} 参数
+   * @param {string} params.title 提示
+   * @param {string} params.orgId 部门id
+   * @param {string} params.userIgnoreList 忽略某些用户
+   * @param {string} params.userFixSelectedList 固定选中用户
+   * @param {Object} success 成功
+   * @param {Object} error 失败
+   */
+  startOrganUserMultiSelector: function(params, success, error){
+    link.startOrganUserMultiSelector([params], success, error)
   }
 };
 
