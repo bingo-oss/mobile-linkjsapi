@@ -10,6 +10,7 @@ var globalEvent = weex.requireModule("globalEvent");
 var ajax = require("./ajax.js");
 var RecordVoice = weex.requireModule("RecordVoice");
 var Media = weex.requireModule("Media");
+var ZoomMeeting = weex.requireModule("ZoomMeeting");
 
 var extend = function(obj, ext) {
   var key;
@@ -2743,6 +2744,70 @@ var linkapi = {
    */
   startOrganUserMultiSelector: function(params, success, error){
     link.startOrganUserMultiSelector([params], success, error)
+  },
+
+  /**
+   * zoom视频会议开始 4.5.1
+   * @param params {object} 参数
+   * @param {string} params.meetingNo 视频会议ID
+   * @param {string} params.userId 账号id
+   * @param {string} params.nickName 参会名称
+   * @param {string} params.isMuteAudio 是否开启声音
+   * @param {string} params.isSwitchAudioSource 是否开启扬声器
+   * @param {string} params.isMuteVideo 是否关闭摄像头
+   * @param {string} params.isSwitchCamera 是否反转摄像头
+   * @param {Object} success 成功
+   * @param {Object} error 失败
+   */
+  startMeeting: function(params, success, error){
+    ZoomMeeting.startMeeting([params], success, error)
+  },
+
+  /**
+   * zoom视频会议加入会议 4.5.1
+   * @param params {object} 参数
+   * @param {string} params.meetingNo 视频会议ID
+   * @param {string} params.nickName 参会名称
+   * @param {string} params.isMuteAudio 是否开启声音
+   * @param {string} params.isSwitchAudioSource 是否开启扬声器
+   * @param {string} params.isMuteVideo 是否关闭摄像头
+   * @param {string} params.isSwitchCamera 是否反转摄像头
+   * @param {Object} success 成功
+   * @param {Object} error 失败
+   */
+  joinMeeting: function(params, success, error){
+    ZoomMeeting.joinMeeting(params, success, error)
+  },
+
+  /**
+   * zoom视频会议初始化 4.5.1
+   * @param params {object} 参数
+   * @param {string} params.sdkKey
+   * @param {string} params.sdkSecret
+   * @param {string} params.apiKey
+   * @param {string} params.apiSecret
+   * @param {Object} success 成功
+   * @param {Object} error 失败
+   */
+  initialize: function(params, success, error){
+    ZoomMeeting.initialize(params, success, error)
+  },
+
+  /**
+   * 文件是否存在 4.5.3 安卓端
+   * @param {String} url - 文件地址
+   * @param {Object} [params] - 配置参数
+   * @param {Object} [params.saveDir] - 保存的目录，默认保存到应用目录下
+   * @param {Object} [params.filename] - 保存的文件名，默认使用系统建议的文件名
+   * @param {Object} [params.headers] - HTTP request header
+   * @param {string} [params.method="GET"] - HTTP method
+   * @param {successCallback} [success] - 成功回调函数
+   * @param {successCallback} [success.code] - code
+   * @param {successCallback} [success.msg] -  code == 0 文件本地存储的地址，可用来调用fileOpenFile -  code == 1 文件下载中 - code == 2 文件没有下载过
+   * @param {errorCallback} [error] - 失败回调函数
+   */
+  isFileExist: function(url, params, success, error) {
+    fileTransfer.isFileExist(url, params, success, error);
   }
 };
 
