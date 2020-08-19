@@ -11,6 +11,7 @@ var ajax = require("./ajax.js");
 var RecordVoice = weex.requireModule("RecordVoice");
 var Media = weex.requireModule("Media");
 var ZoomMeeting = weex.requireModule("ZoomMeeting");
+var StepCounter = weex.requireModule("StepCounter");
 
 var extend = function(obj, ext) {
   var key;
@@ -2791,6 +2792,26 @@ var linkapi = {
    */
   initialize: function(params, success, error){
     ZoomMeeting.initialize(params, success, error)
+  },
+
+  /**
+   * 设置全屏-4.5.1 Android
+   * @param params {object} 参数
+   * @param {string} params.isEnable true 全屏 false 取消全屏
+   * @param {Object} success 成功
+   * @param {Object} error 失败
+   */
+  setFullScreen: function(params, success, error){
+    link.setFullScreen([params], success, error)
+  },
+
+  /**
+   * 获取步数-4.5.1
+   * @param {Object} success 成功
+   * @param {Object} error 失败
+   */
+  getTodayStepCount: function(success, error){
+    StepCounter.getTodayStepCount({}, success, error)
   },
 
   /**
