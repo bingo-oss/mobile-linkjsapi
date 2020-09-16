@@ -2582,7 +2582,7 @@ var linkapi = {
       },
       params
     );
-    link.browseMultiMedia(params);
+    link.browseMultiMedia([params]);
   },
 
   /**
