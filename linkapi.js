@@ -2807,6 +2807,17 @@ var linkapi = {
   },
 
   /**
+   * 安卓设置全面屏顶部颜色
+   * @param params {object} 参数
+   * @param {string} params.color 颜色
+   * @param {Object} success 成功
+   * @param {Object} error 失败
+   */
+  setStatusBarColor: function(params, success, error) {
+    link.setStatusBarColor([params], success, error);
+  },
+
+  /**
    * 获取步数-4.5.1
    * @param {Object} success 成功
    * @param {Object} error 失败
