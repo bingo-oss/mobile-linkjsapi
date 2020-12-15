@@ -12,6 +12,7 @@ var RecordVoice = weex.requireModule("RecordVoice");
 var Media = weex.requireModule("Media");
 var ZoomMeeting = weex.requireModule("ZoomMeeting");
 var StepCounter = weex.requireModule("StepCounter");
+var Broadcast = weex.requireModule("BroadcastModule");
 
 var extend = function(obj, ext) {
   var key;
@@ -2761,7 +2762,7 @@ var linkapi = {
    * @param {Object} error 失败
    */
   startMeeting: function(params, success, error){
-    ZoomMeeting.startMeeting([params], success, error)
+    ZoomMeeting.startMeeting(params, success, error)
   },
 
   /**
@@ -2810,6 +2811,36 @@ var linkapi = {
    * @param {Object} success 成功
    * @param {Object} error 失败
    */
+      /**
+     * 获取今天的步数
+     *
+     * 如果需要持续获取步数变化，可以js启用一个定时器，定时调用方法
+	 *
+	 *	成功回调值 
+	 *  {
+	 *		"from":	"com.huawei.health",//如果是"from"="com.huawei.health"，则是从华为运动健康获取到的数据，否则没有这一个字段
+	 *      "stepCount":10000,//如果"from"="com.huawei.health"，则是从华为健康读取到的步数，否则是原来旧逻辑的步数（非华为手机一般都没有华为健康应用，但用户手动下载华为运动健康应用也可以读取到）
+	 *	    "nativeStepCount":20000,//原来旧逻辑的步数，如果"from"="com.huawei.health"，则有这一个字段，否则没有这一个字段。
+	 *	}
+	 *
+	 *  失败回调值 
+	 *  {
+	 *	   "errorMsg":"失败回调说明"，
+	 *     "errorCode":失败回调code,
+	 *     "from":"com.huawei.health",//为了以后区分是三星健康还是华为运动健康用的。
+	 *     "nativeStepCount":10000,原来旧逻辑的步数
+	 *  }
+	 errorCode和errorMsg对接列表
+		 1 调用失败 典型场景:没有安装华为运动健康App或者未启动
+		 2 参数异常 典型场景:不支持某项查询
+		 4 API调用异常 典型场景:如：一个应用多次注册运动而未进行解注册
+		 1001 隐私权限校验异常 典型场景:用户未授权，需要提醒用户打开相关权限
+		 1002 scope校验异常 典型场景:华为未授权对应的scope权限，需要三方开发者到开发者联盟申请。参见申请 HiHealth Kit 服务。
+		 3  数据校验失败 典型场景:查询参数为 null 或回调函数为 null
+		 7  参数错误 典型场景:插入数据时起止时间不同，如：插入体重数据
+		 1003  APP隐私协议未同意异常 典型场景:用户未在华为运动健康App 上同意隐私协议
+		 -100  没有获取到读取步数的权限（android10上没有华为运动健康的手机，需要申请”获取设备中的健身运动信息“权限才可以获取步数，如果没有权限则报这一个错）
+     */
   getTodayStepCount: function(success, error){
     StepCounter.getTodayStepCount({}, success, error)
   },
@@ -2829,7 +2860,95 @@ var linkapi = {
    */
   isFileExist: function(url, params, success, error) {
     fileTransfer.isFileExist(url, params, success, error);
-  }
+  },
+  /**
+     * 4.5.4
+     * 事件注册-跨技术
+     * @param {string} eventName 事件名称
+     * @param {function} receiver 事件处理
+     * @param {function} success 成功
+     * @param {function} error 失败
+     */
+    registerReceiverEvent: function (eventName, receiver, success, error) {
+        Broadcast.registerReceiver({ "receiverId": null, eventName }, receiver, success, error)
+    },
+    /**
+    * 事件注册-跨技术-取消注册
+    * @param {string} receiverId 注册id
+    * @param {function} success 成功
+    * @param {function} error 失败
+    */
+    unregisterReceiver: function (receiverId, success, error) {
+        Broadcast.unregisterReceiver({ receiverId}, success, error)
+    },
+    /**
+     * 发送事件
+     * @param {string} eventName 事件名称
+     * @param {object} params 传参参数
+     * @param {function} success 成功
+     * @param {function} error 失败
+     */
+    sendBroadcast: function (eventName, params, success, error) {
+        Broadcast.sendBroadcast({ eventName, params }, success, error)
+    },
+      /**
+     * 发起选择文件资源
+     * @method linkapi.selectFiles
+     * @param type {number} 范围0~5，0：拍照 1：选择图片  2 本地文件单选  3：云盘文件  4: 界与聊天里的文件跳转后界面相同，选择最近聊天文件和本地文件(仅支持安卓)  5: 本地文件多选(仅支持安卓)
+     * @param extra {object} {"isSelectVideoEnable": true}  是否允许选择视频
+     * @param success {function} 成功回调函数
+     * @param error {function} 失败回调函数
+     */
+    selectResourceFiles: function(type, success, error) {
+        try {
+        link.selectResourceFiles([type, extra], success, error);
+        } catch (e) {}
+    },
+    /**
+   * 获取全部本地应用
+   * @method linkapi.getAllServices
+   * @param success {function} 成功获取数据回调
+   * @param error {function} 失败回调
+   */
+    getAllServices: function (success, error) {
+        var successCallback = function (resp) {
+            if (typeof resp == "string") {
+                resp = JSON.parse(resp);
+                success(resp);
+            } else if (typeof resp == "object") {
+                success(resp);
+            }
+        };
+        link.launchLinkServiceWithDictionary(
+            [
+                {
+                    code: "Data",
+                    key: "GetAllServices"
+                }
+            ],
+            successCallback,
+            error
+        );
+    },
+    /**
+    * 清除红点
+    * @method linkapi.clearHasNewVersionTip
+    * @param params {JSON} 需要清除的应用对象，从getAllServices获取的
+    * @param success {function} 成功获取数据回调
+    * @param error {function} 失败回调
+    */
+    clearHasNewVersionTip: function (params, success, error) {
+        link.clearHasNewVersionTip([params], success, error);
+    },
+    /**
+   * 判断是否有红点，如果存在，则同步应用数据
+   * @method linkapi.getHasNewVersionTip
+   * @param success {function} 成功获取数据回调
+   * @param error {function} 失败回调
+   */
+    getHasNewVersionTip: function (success, error) {
+        link.getHasNewVersionTip([], success, error);
+    }
 };
 
 /**
